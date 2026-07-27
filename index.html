@@ -1,0 +1,2359 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="FlowDesk PRO complete responsive working prototype">
+  <title>FlowDesk PRO — Complete Working Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --fd-primary: #6e39cb;
+      --fd-primary-hover: #5a2da8;
+      --fd-primary-soft: #f0e9fe;
+      --fd-primary-mid: #deccfe;
+      --fd-bg: #f4f5f9;
+      --fd-surface: #ffffff;
+      --fd-surface-2: #f8f8fb;
+      --fd-border: #e7e8eb;
+      --fd-text: #3a3541;
+      --fd-text-2: #534e59;
+      --fd-muted: #8f8b95;
+      --fd-success: #16875f;
+      --fd-success-bg: #e9f7f1;
+      --fd-warning: #b66c10;
+      --fd-warning-bg: #fdf4e7;
+      --fd-danger: #dc3535;
+      --fd-danger-bg: #feecec;
+      --fd-info: #245fcc;
+      --fd-info-bg: #eaf2ff;
+      --fd-sidebar: 240px;
+      --fd-topbar: 64px;
+      --fd-shadow: 0 10px 30px rgba(58, 53, 65, .12);
+      --fd-shadow-sm: 0 1px 3px rgba(58, 53, 65, .08);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      color: var(--fd-text);
+      background: var(--fd-bg);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    button, input, select, textarea { font: inherit; }
+    button, select { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible {
+      outline: 3px solid var(--fd-primary-mid);
+      outline-offset: 2px;
+    }
+    .hidden { display: none !important; }
+    .app { width: 100%; height: 100dvh; display: grid; grid-template-columns: var(--fd-sidebar) minmax(0, 1fr); }
+    .sidebar {
+      position: relative;
+      z-index: 40;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--fd-surface);
+      border-right: 1px solid var(--fd-border);
+    }
+    .brand {
+      min-height: var(--fd-topbar);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--fd-border);
+    }
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      flex: none;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: white;
+      background: var(--fd-primary);
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .brand-name { font-size: 17px; font-weight: 600; letter-spacing: -.2px; }
+    .pro-badge {
+      padding: 2px 6px;
+      color: var(--fd-primary);
+      background: var(--fd-primary-soft);
+      border-radius: 5px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+    .nav-scroll { min-height: 0; flex: 1; overflow-y: auto; padding: 12px 10px 20px; }
+    .nav-section + .nav-section { margin-top: 20px; }
+    .nav-label {
+      margin: 0 10px 7px;
+      color: var(--fd-muted);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .nav-label:empty { display: none; }
+    .nav-link {
+      width: 100%;
+      height: 40px;
+      margin: 2px 0;
+      padding: 0 11px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      border: 0;
+      border-radius: 10px;
+      color: var(--fd-text-2);
+      background: transparent;
+      font-size: 15px;
+      line-height: 24px;
+      text-align: left;
+    }
+    .nav-link:hover { color: var(--fd-primary); background: var(--fd-primary-soft); }
+    .nav-link.active { color: var(--fd-primary); background: var(--fd-primary-mid); font-weight: 500; }
+    .nav-icon { width: 22px; display: grid; place-items: center; color: inherit; }
+    .nav-icon svg { display: block; }
+    .nav-count {
+      min-width: 22px;
+      margin-left: auto;
+      padding: 1px 7px;
+      border-radius: 999px;
+      color: white;
+      background: var(--fd-primary);
+      font-size: 11px;
+      text-align: center;
+    }
+    .nav-off {
+      margin-left: auto;
+      padding: 2px 6px;
+      border-radius: 5px;
+      color: var(--fd-muted);
+      background: var(--fd-surface-2);
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .sidebar-profile {
+      margin: 10px;
+      padding: 11px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 0;
+      border-radius: 12px;
+      color: white;
+      background: var(--fd-primary);
+    }
+    .avatar {
+      width: 36px;
+      height: 36px;
+      flex: none;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--fd-primary);
+      background: var(--fd-primary-mid);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .profile-text { min-width: 0; flex: 1; }
+    .profile-name, .profile-role { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .profile-name { color: white; font-size: 12px; font-weight: 600; }
+    .profile-role { margin-top: 1px; color: rgba(255,255,255,.72); font-size: 10px; }
+    .sidebar-profile .avatar { color: white; background: rgba(255,255,255,.22); }
+    .shell { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+    .topbar {
+      min-height: var(--fd-topbar);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 24px;
+      background: var(--fd-surface);
+      border-bottom: 1px solid var(--fd-border);
+    }
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      flex: none;
+      display: grid;
+      place-items: center;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      color: var(--fd-text-2);
+      background: transparent;
+      font-size: 17px;
+    }
+    .icon-btn:hover { color: var(--fd-primary); background: var(--fd-primary-soft); }
+    .menu-btn { display: none; }
+    .search-box {
+      width: min(420px, 36vw);
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 0 13px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      background: var(--fd-bg);
+    }
+    .search-box:focus-within { border-color: var(--fd-primary); background: white; }
+    .search-box span { color: var(--fd-muted); }
+    .search-box input { min-width: 0; flex: 1; border: 0; outline: 0; color: var(--fd-text); background: transparent; }
+    .search-box input { font-size: 15px; line-height: 24px; }
+    .top-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .demo-select {
+      height: 38px;
+      max-width: 170px;
+      padding: 0 31px 0 11px;
+      border: 1px solid var(--fd-border);
+      border-radius: 9px;
+      color: var(--fd-text-2);
+      background: white;
+    }
+    .btn {
+      min-height: 40px;
+      padding: 8px 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid var(--fd-border);
+      border-radius: 8px;
+      color: var(--fd-text-2);
+      background: white;
+      font-size: 15px;
+      line-height: 24px;
+      font-weight: 500;
+    }
+    .btn:hover { border-color: var(--fd-primary-mid); color: var(--fd-primary); background: var(--fd-primary-soft); }
+    .btn-primary { border-color: var(--fd-primary); color: white; background: var(--fd-primary); }
+    .btn-primary:hover { border-color: var(--fd-primary-hover); color: white; background: var(--fd-primary-hover); }
+    .btn-danger { border-color: var(--fd-danger); color: white; background: var(--fd-danger); }
+    .btn-danger:hover { border-color: #bc2828; color: white; background: #bc2828; }
+    .btn-soft { border-color: transparent; color: var(--fd-primary); background: var(--fd-primary-soft); }
+    .btn-sm { min-height: 32px; padding: 4px 10px; border-radius: 8px; font-size: 13px; line-height: 20px; }
+    .notification-wrap { position: relative; }
+    .profile-top { width: 36px; height: 36px; border-radius: 50%; color: var(--fd-primary); background: var(--fd-primary-mid); font-size: 12px; font-weight: 600; }
+    .notification-dot {
+      position: absolute;
+      top: 4px;
+      right: 3px;
+      min-width: 15px;
+      height: 15px;
+      padding: 0 4px;
+      display: grid;
+      place-items: center;
+      border: 2px solid white;
+      border-radius: 999px;
+      color: white;
+      background: var(--fd-danger);
+      font-size: 8px;
+      font-weight: 800;
+    }
+    .content { min-height: 0; flex: 1; overflow: auto; scroll-behavior: smooth; }
+    .page { width: min(1440px, 100%); min-height: 100%; margin: 0 auto; padding: 24px 32px 40px; }
+    .page-head {
+      margin-bottom: 22px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .breadcrumb { margin-bottom: 6px; color: var(--fd-muted); font-size: 12px; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 4px; font-size: 28px; font-weight: 600; line-height: 36px; letter-spacing: -.3px; }
+    h2 { margin-bottom: 4px; font-size: 16px; font-weight: 600; line-height: 24px; }
+    h3 { margin-bottom: 4px; font-size: 14px; font-weight: 600; line-height: 20px; }
+    .subtle { color: var(--fd-muted); }
+    .page-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .grid { display: grid; gap: 18px; }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .split { grid-template-columns: minmax(0, 1.65fr) minmax(290px, .75fr); }
+    .card {
+      min-width: 0;
+      padding: 20px 24px;
+      border: 1px solid var(--fd-border);
+      border-radius: 13px;
+      background: var(--fd-surface);
+      box-shadow: var(--fd-shadow-sm);
+    }
+    .card-head { margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .stat { position: relative; overflow: hidden; padding: 16px; }
+    .stat-icon {
+      width: 38px;
+      height: 38px;
+      margin-bottom: 14px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      color: var(--fd-primary);
+      background: var(--fd-primary-soft);
+      font-weight: 800;
+    }
+    .stat-value { font-size: 28px; font-weight: 700; line-height: 36px; letter-spacing: -.4px; }
+    .stat-label { margin-top: 1px; color: var(--fd-muted); font-size: 13px; line-height: 20px; }
+    .trend { margin-top: 10px; color: var(--fd-success); font-size: 11px; font-weight: 700; }
+    .chart {
+      height: 210px;
+      display: flex;
+      align-items: flex-end;
+      gap: 11px;
+      padding: 18px 5px 0;
+      border-bottom: 1px solid var(--fd-border);
+    }
+    .bar-group { height: 100%; flex: 1; display: flex; align-items: flex-end; justify-content: center; gap: 4px; }
+    .bar { width: min(18px, 35%); min-height: 5px; border-radius: 5px 5px 0 0; background: var(--fd-primary); }
+    .bar.alt { opacity: .32; }
+    .chart-labels { display: flex; gap: 11px; padding: 8px 5px 0; }
+    .chart-labels span { flex: 1; color: var(--fd-muted); font-size: 10px; text-align: center; }
+    .activity-list { display: flex; flex-direction: column; }
+    .activity {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      gap: 10px;
+      padding: 12px 0;
+      border-top: 1px solid var(--fd-border);
+    }
+    .activity:first-child { border-top: 0; padding-top: 0; }
+    .activity-dot {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      color: var(--fd-primary);
+      background: var(--fd-primary-soft);
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .activity-title { font-size: 12px; font-weight: 700; }
+    .activity-copy, .activity-time { color: var(--fd-muted); font-size: 10px; }
+    .table-card { padding: 0; overflow: hidden; }
+    .table-toolbar { padding: 15px 18px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--fd-border); }
+    .filter {
+      height: 34px;
+      padding: 0 10px;
+      border: 1px solid var(--fd-border);
+      border-radius: 8px;
+      color: var(--fd-text-2);
+      background: white;
+    }
+    .table-scroll { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 13px 16px; border-bottom: 1px solid var(--fd-border); text-align: left; white-space: nowrap; }
+    th { color: var(--fd-muted); background: var(--fd-surface-2); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
+    tbody tr { cursor: pointer; }
+    tbody tr:hover { background: var(--fd-primary-soft); }
+    td strong { color: var(--fd-text); font-size: 12px; }
+    td small { display: block; margin-top: 2px; color: var(--fd-muted); }
+    .pill {
+      min-height: 24px;
+      padding: 3px 9px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .015em;
+    }
+    .pill::before { width: 6px; height: 6px; border-radius: 50%; background: currentColor; content: ""; }
+    .pill.approved, .pill.closed { color: var(--fd-success); background: var(--fd-success-bg); }
+    .pill.in_review, .pill.submitted, .pill.fulfilment, .pill.scheduled, .pill.active { color: var(--fd-info); background: var(--fd-info-bg); }
+    .pill.sent_back, .pill.draft { color: var(--fd-warning); background: var(--fd-warning-bg); }
+    .pill.rejected, .pill.cancelled { color: var(--fd-danger); background: var(--fd-danger-bg); }
+    .module-pill { padding: 4px 8px; border-radius: 6px; color: var(--fd-primary); background: var(--fd-primary-soft); font-size: 10px; font-weight: 800; }
+    .catalog-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; }
+    .service-card {
+      min-height: 170px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--fd-border);
+      border-radius: 13px;
+      background: white;
+      box-shadow: var(--fd-shadow-sm);
+    }
+    .service-card:hover { border-color: var(--fd-primary-mid); transform: translateY(-1px); }
+    .service-card.disabled { opacity: .56; }
+    .service-icon {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      color: var(--fd-primary);
+      background: var(--fd-primary-soft);
+      font-size: 17px;
+      font-weight: 800;
+    }
+    .service-title { margin-top: 14px; font-weight: 750; }
+    .service-copy { margin-top: 4px; color: var(--fd-muted); font-size: 12px; }
+    .service-foot { margin-top: auto; padding-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .board { display: grid; grid-template-columns: repeat(3, minmax(250px, 1fr)); gap: 15px; overflow-x: auto; }
+    .board-col { min-width: 250px; padding: 12px; border-radius: 12px; background: #eceef4; }
+    .board-title { margin-bottom: 10px; display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; }
+    .board-card { margin-top: 9px; padding: 13px; border: 1px solid var(--fd-border); border-radius: 10px; background: white; box-shadow: var(--fd-shadow-sm); }
+    .board-card button { margin-top: 11px; }
+    .segmented { padding: 3px; display: inline-flex; border-radius: 9px; background: var(--fd-surface-2); }
+    .segmented button { height: 30px; padding: 0 10px; border: 0; border-radius: 7px; color: var(--fd-muted); background: transparent; font-size: 11px; font-weight: 700; }
+    .segmented button.active { color: var(--fd-primary); background: white; box-shadow: var(--fd-shadow-sm); }
+    .timeline { position: relative; display: flex; flex-direction: column; }
+    .timeline::before { position: absolute; top: 14px; bottom: 14px; left: 13px; width: 2px; background: var(--fd-border); content: ""; }
+    .timeline-item { position: relative; padding: 0 0 22px 40px; }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-dot { position: absolute; top: 2px; left: 4px; width: 20px; height: 20px; display: grid; place-items: center; border: 3px solid white; border-radius: 50%; color: white; background: var(--fd-success); box-shadow: 0 0 0 1px var(--fd-border); font-size: 8px; }
+    .timeline-item.pending .timeline-dot { background: var(--fd-muted); }
+    .detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 24px; }
+    .field-label { color: var(--fd-muted); font-size: 10px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+    .field-value { margin-top: 4px; font-weight: 650; }
+    .balance { padding: 16px; border-radius: 12px; background: var(--fd-primary-soft); }
+    .balance strong { display: block; font-size: 24px; color: var(--fd-primary); }
+    .week-grid { display: grid; grid-template-columns: 1.4fr repeat(5, 1fr) .8fr; }
+    .week-grid > div { min-height: 48px; padding: 12px; border-right: 1px solid var(--fd-border); border-bottom: 1px solid var(--fd-border); }
+    .week-grid > div:nth-child(-n+7) { background: var(--fd-surface-2); color: var(--fd-muted); font-size: 10px; font-weight: 800; text-transform: uppercase; }
+    .week-grid input { width: 100%; border: 0; outline: 0; background: transparent; text-align: center; }
+    .calendar { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+    .cal-cell { min-height: 82px; padding: 9px; border-right: 1px solid var(--fd-border); border-bottom: 1px solid var(--fd-border); background: white; font-size: 11px; }
+    .cal-cell:nth-child(7n) { border-right: 0; }
+    .cal-cell.muted { color: #bcb9c0; background: var(--fd-surface-2); }
+    .cal-event { margin-top: 7px; padding: 3px 5px; border-radius: 5px; color: var(--fd-primary); background: var(--fd-primary-soft); font-size: 9px; font-weight: 700; }
+    .empty { padding: 46px 20px; text-align: center; }
+    .empty-icon { width: 54px; height: 54px; margin: 0 auto 14px; display: grid; place-items: center; border-radius: 15px; color: var(--fd-primary); background: var(--fd-primary-soft); font-size: 22px; }
+    .module-row { padding: 14px 0; display: flex; align-items: center; gap: 14px; border-top: 1px solid var(--fd-border); }
+    .module-row:first-child { border-top: 0; padding-top: 0; }
+    .module-meta { min-width: 0; flex: 1; }
+    .switch { position: relative; width: 43px; height: 24px; flex: none; border: 0; border-radius: 999px; background: #cacbd2; }
+    .switch::after { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: white; box-shadow: 0 1px 3px rgba(0,0,0,.18); content: ""; transition: .18s; }
+    .switch.on { background: var(--fd-success); }
+    .switch.on::after { transform: translateX(19px); }
+    .callout { padding: 14px 16px; display: flex; gap: 11px; border: 1px solid var(--fd-primary-mid); border-radius: 11px; color: var(--fd-text-2); background: var(--fd-primary-soft); }
+    .callout.warning { border-color: #f1d4a9; background: var(--fd-warning-bg); }
+    .chat { height: min(480px, 55vh); display: flex; flex-direction: column; }
+    .messages { min-height: 0; flex: 1; overflow-y: auto; padding: 4px; }
+    .message { max-width: min(680px, 86%); margin: 10px 0; padding: 12px 14px; border-radius: 12px 12px 12px 3px; background: var(--fd-surface-2); }
+    .message.user { margin-left: auto; border-radius: 12px 12px 3px 12px; color: white; background: var(--fd-primary); }
+    .chat-input { padding-top: 12px; display: flex; gap: 8px; border-top: 1px solid var(--fd-border); }
+    .chat-input input { min-width: 0; flex: 1; height: 40px; padding: 0 12px; border: 1px solid var(--fd-border); border-radius: 9px; }
+    .login {
+      width: 100%;
+      height: 100dvh;
+      padding: 24px;
+      display: grid;
+      place-items: center;
+      overflow-y: auto;
+      background: var(--fd-bg);
+    }
+    .login-card {
+      width: min(900px, 100%);
+      display: grid;
+      grid-template-columns: .85fr 1.15fr;
+      overflow: hidden;
+      border: 1px solid var(--fd-border);
+      border-radius: 16px;
+      background: white;
+      box-shadow: var(--fd-shadow);
+    }
+    .login-brand { padding: 44px 36px; color: white; background: var(--fd-primary); }
+    .login-brand h1 { margin-top: 55px; font-size: 30px; color: white; }
+    .login-brand p { color: rgba(255,255,255,.78); }
+    .login-form { padding: 44px; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+    .form-field { min-width: 0; }
+    .form-field.full { grid-column: 1 / -1; }
+    label { display: block; margin-bottom: 6px; color: var(--fd-text-2); font-size: 12px; font-weight: 700; }
+    .input, textarea.input, select.input {
+      width: 100%;
+      min-height: 40px;
+      padding: 9px 11px;
+      border: 1px solid var(--fd-border);
+      border-radius: 8px;
+      color: var(--fd-text);
+      background: white;
+    }
+    textarea.input { min-height: 88px; resize: vertical; }
+    .input:focus { border-color: var(--fd-primary); outline: 3px solid var(--fd-primary-soft); }
+    .form-hint { margin-top: 5px; color: var(--fd-muted); font-size: 10px; }
+    .modal-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      padding: 22px;
+      display: grid;
+      place-items: center;
+      background: rgba(45, 41, 51, .46);
+    }
+    .modal {
+      width: min(650px, 100%);
+      max-height: min(780px, calc(100dvh - 44px));
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-radius: 15px;
+      background: white;
+      box-shadow: 0 25px 70px rgba(30, 27, 34, .28);
+    }
+    .modal.sm { width: min(470px, 100%); }
+    .modal-head { padding: 18px 20px; display: flex; align-items: flex-start; gap: 14px; border-bottom: 1px solid var(--fd-border); }
+    .modal-head > div { min-width: 0; flex: 1; }
+    .modal-head h2 { margin: 0; }
+    .modal-body { min-height: 0; overflow-y: auto; padding: 20px; }
+    .modal-foot { padding: 14px 20px; display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--fd-border); }
+    .toast-stack { position: fixed; right: 18px; bottom: 18px; z-index: 160; display: flex; flex-direction: column; gap: 9px; pointer-events: none; }
+    .toast {
+      width: min(360px, calc(100vw - 36px));
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--fd-border);
+      border-left: 4px solid var(--fd-primary);
+      border-radius: 10px;
+      background: white;
+      box-shadow: var(--fd-shadow);
+      animation: toast-in .18s ease-out;
+    }
+    .toast.success { border-left-color: var(--fd-success); }
+    .toast.error { border-left-color: var(--fd-danger); }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(8px); } }
+    .mobile-overlay { display: none; }
+    .mobile-brand, .mobile-search, .mobile-nav { display: none; }
+    .dashboard-head h1 { color: var(--fd-primary); }
+    .dashboard-head .subtle { font-size: 13px; line-height: 20px; }
+    .simple-stat { min-height: 156px; padding: 24px; }
+    .simple-stat .stat-icon { margin-bottom: 18px; color: var(--fd-primary); background: var(--fd-primary-soft); }
+    .simple-stat.warning .stat-icon { color: var(--fd-warning); background: var(--fd-warning-bg); }
+    .simple-stat.success .stat-icon { color: var(--fd-success); background: var(--fd-success-bg); }
+    .simple-stat.warning .stat-value { color: var(--fd-warning); }
+    .stat-trend { position: absolute; top: 24px; right: 24px; padding: 3px 9px; border-radius: 999px; color: var(--fd-text-2); background: var(--fd-surface-2); font-size: 11px; font-weight: 500; }
+    .simple-stat.warning .stat-trend { color: var(--fd-success); background: var(--fd-success-bg); }
+    .simple-stat.success .stat-trend { color: var(--fd-success); background: var(--fd-success-bg); }
+    .dashboard-main { margin-top: 24px; display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(300px, .72fr); gap: 24px; align-items: start; }
+    .status-card { min-height: 100%; }
+    .trend-card { margin-top: 24px; }
+    .attention-list { border-top: 1px solid var(--fd-border); }
+    .attention-row {
+      min-height: 60px;
+      padding: 8px 20px;
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--fd-border);
+    }
+    .attention-row:last-child { border-bottom: 0; }
+    .attention-row strong { font-size: 15px; font-weight: 500; line-height: 22px; }
+    .attention-row .subtle { font-size: 13px; line-height: 18px; }
+    .attention-meta { display: flex; align-items: center; gap: 12px; white-space: nowrap; }
+    .sla-state { display: inline-flex; align-items: center; gap: 6px; color: var(--fd-success); font-weight: 500; }
+    .sla-state i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+    .sla-state.risk { color: var(--fd-warning); }
+    .attention-actions { display: flex; gap: 4px; }
+    .text-action {
+      min-height: 32px;
+      padding: 0 10px;
+      border: 0;
+      border-radius: 8px;
+      color: var(--fd-primary);
+      background: transparent;
+      font-weight: 500;
+    }
+    .text-action:hover { background: var(--fd-primary-soft); }
+    .text-action.danger { color: var(--fd-danger); }
+    .status-ring-wrap { display: flex; align-items: center; justify-content: center; position: relative; padding: 4px 0; }
+    .status-ring-label { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+    .status-ring-label strong { font-size: 24px; line-height: 30px; }
+    .status-legend { margin-top: 12px; display: grid; gap: 8px; }
+    .status-legend-row { display: flex; align-items: center; gap: 8px; color: var(--fd-text-2); }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .status-legend-row strong { margin-left: auto; }
+    .request-tabs { margin-bottom: 16px; display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid var(--fd-border); }
+    .request-tab { flex: none; padding: 10px 12px; border: 0; border-bottom: 2px solid transparent; color: var(--fd-text-2); background: transparent; }
+    .request-tab.active { color: var(--fd-primary); border-bottom-color: var(--fd-primary); font-weight: 500; }
+    .request-action-cell { display: flex; gap: 4px; }
+
+    @media (max-width: 1180px) {
+      .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .split { grid-template-columns: 1fr; }
+      .dashboard-main { grid-template-columns: 1fr; gap: 16px; }
+      .demo-select { max-width: 135px; }
+    }
+    @media (min-width: 701px) and (max-width: 960px) {
+      .app { grid-template-columns: 64px minmax(0, 1fr); }
+      .sidebar {
+        position: relative;
+        inset: auto;
+        width: auto;
+        box-shadow: none;
+        transform: none;
+      }
+      .brand { justify-content: center; padding: 0; }
+      .brand-name, .pro-badge, .nav-label, .nav-link > span:not(.nav-icon):not(.nav-count), .sidebar-profile .profile-text, .sidebar-profile > span:last-child { display: none; }
+      .nav-scroll { padding: 12px 8px; }
+      .nav-section + .nav-section { margin-top: 4px; }
+      .nav-link { position: relative; width: 40px; height: 40px; margin: 3px auto; padding: 0; justify-content: center; }
+      .nav-icon { width: auto; }
+      .nav-count { position: absolute; top: -2px; right: -4px; min-width: 16px; height: 16px; padding: 0 4px; display: grid; place-items: center; border: 2px solid white; font-size: 8px; }
+      .sidebar-profile { width: 40px; height: 40px; margin: 8px auto 12px; padding: 0; justify-content: center; border: 0; background: transparent; }
+      .sidebar-profile .avatar { width: 36px; height: 36px; color: white; background: var(--fd-primary); }
+      .topbar { padding: 0 20px; }
+      .page { padding: 20px 20px 40px; }
+      .search-box { width: 260px; }
+      .top-new span { display: none; }
+      .top-new { width: 40px; padding: 0; }
+      .login-card { grid-template-columns: 1fr; }
+      .login-brand { display: none; }
+    }
+    @media (max-width: 700px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: min(286px, 86vw);
+        box-shadow: var(--fd-shadow);
+        transform: translateX(-105%);
+        transition: transform .22s ease;
+      }
+      .app.sidebar-open .sidebar { transform: translateX(0); }
+      .mobile-overlay { position: fixed; inset: 0; z-index: 35; display: block; visibility: hidden; opacity: 0; background: rgba(45,41,51,.34); transition: .2s; }
+      .app.sidebar-open .mobile-overlay { visibility: visible; opacity: 1; }
+      .topbar { min-height: 56px; height: 56px; padding: 0 16px; gap: 4px; }
+      .mobile-brand { width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: 8px; color: white; background: var(--fd-primary); font-weight: 700; }
+      .mobile-search { display: grid; margin-left: auto; }
+      .menu-btn { display: none; }
+      .search-box { display: none; }
+      .demo-select, .top-new { display: none; }
+      .top-actions { margin-left: 0; gap: 4px; }
+      .top-actions .icon-btn { width: 36px; height: 36px; }
+      .page { padding: 16px 16px 28px; }
+      .breadcrumb { display: none; }
+      .page-head { align-items: flex-start; flex-direction: column; margin-bottom: 16px; }
+      h1 { font-size: 22px; line-height: 30px; }
+      .dashboard-head .page-actions { display: none; }
+      .page-actions { width: 100%; }
+      .page-actions .btn { flex: 1; }
+      .grid-4, .grid-3, .grid-2, .catalog-grid, .detail-grid, .form-grid { grid-template-columns: 1fr; }
+      .form-field.full { grid-column: auto; }
+      .grid { gap: 12px; }
+      .card { padding: 16px; }
+      .stat { padding: 16px; }
+      .simple-stat { min-height: 0; }
+      .stat-trend { top: 16px; right: 16px; }
+      .trend-card { margin-top: 12px; }
+      .table-toolbar { align-items: stretch; flex-direction: column; }
+      .table-toolbar .filter { width: 100%; }
+      .board { grid-template-columns: repeat(3, minmax(255px, 1fr)); }
+      .chart { height: 170px; gap: 5px; }
+      .activity { grid-template-columns: 32px minmax(0, 1fr); }
+      .activity-time { grid-column: 2; }
+      .attention-row { padding: 16px; display: flex; align-items: stretch; flex-direction: column; gap: 10px; }
+      .attention-row .avatar { width: 28px; height: 28px; }
+      .attention-row > .pill { align-self: flex-start; }
+      .attention-actions { width: 100%; gap: 8px; }
+      .attention-actions .btn, .attention-actions .text-action { min-height: 44px; flex: 1; border: 1px solid var(--fd-border); }
+      .attention-actions .text-action:first-child { color: white; background: var(--fd-primary); border-color: var(--fd-primary); }
+      .request-tabs { gap: 8px; border-bottom: 0; padding-bottom: 2px; }
+      .request-tab { height: 32px; padding: 0 14px; border: 1px solid var(--fd-border); border-radius: 999px; background: white; }
+      .request-tab.active { color: white; background: var(--fd-primary); border-color: var(--fd-primary); }
+      .request-table-card { overflow: visible; border: 0; background: transparent; box-shadow: none; }
+      .request-table-card .table-toolbar { display: none; }
+      .request-table-card .table-scroll { overflow: visible; }
+      .responsive-table, .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; }
+      .responsive-table thead { display: none; }
+      .responsive-table tbody { display: grid; gap: 12px; }
+      .responsive-table tr { padding: 16px; border: 1px solid var(--fd-border); border-radius: 12px; background: white; cursor: default; }
+      .responsive-table tbody tr:hover { background: white; }
+      .responsive-table td { padding: 0; border: 0; white-space: normal; }
+      .responsive-table td + td { margin-top: 10px; }
+      .responsive-table td::before { display: block; margin-bottom: 2px; color: var(--fd-muted); font-size: 12px; font-weight: 500; line-height: 16px; letter-spacing: .04em; text-transform: uppercase; content: attr(data-label); }
+      .responsive-table td strong { font-size: 15px; font-weight: 500; line-height: 22px; }
+      .responsive-table td small { font-size: 13px; line-height: 18px; }
+      .responsive-table .request-action-cell { margin-top: 14px; display: flex; gap: 8px; }
+      .responsive-table .request-action-cell::before { display: none; }
+      .responsive-table .request-action-cell .btn { min-height: 44px; flex: 1; font-size: 15px; }
+      .week-grid { min-width: 720px; }
+      .calendar { min-width: 640px; }
+      .mobile-nav { min-height: 56px; display: flex; align-items: stretch; border-top: 1px solid var(--fd-border); background: white; }
+      .mobile-nav button { min-width: 0; flex: 1; padding: 5px 2px 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: 0; color: var(--fd-muted); background: white; font-size: 10px; font-weight: 500; line-height: 12px; }
+      .mobile-nav button b { font-size: 17px; font-weight: 500; line-height: 20px; }
+      .mobile-nav button.active { color: var(--fd-primary); }
+      .modal-layer { padding: 0; place-items: end center; }
+      .modal, .modal.sm { width: 100%; max-height: 92dvh; border-radius: 16px 16px 0 0; }
+      .modal-body { padding: 17px; }
+      .modal-foot .btn { min-height: 44px; }
+      .login { padding: 0; background: white; }
+      .login-card { min-height: 100dvh; border: 0; border-radius: 0; box-shadow: none; }
+      .login-form { padding: 34px 22px; }
+    }
+    @media (max-width: 430px) {
+      .top-actions { gap: 2px; }
+    }
+    .required-mark { color: var(--fd-danger); margin-left: 3px; }
+    .field-error { color: var(--fd-danger); font-size: 12px; min-height: 16px; margin-top: 4px; }
+    .input.invalid { border-color: var(--fd-danger); box-shadow: 0 0 0 3px rgba(249,49,49,.08); }
+    .modal-section-title { grid-column: 1 / -1; margin: 4px 0 -2px; font-size: 12px; color: var(--fd-muted); text-transform: uppercase; letter-spacing: .08em; }
+    .comment-list { display: grid; gap: 10px; margin-top: 14px; }
+    .comment-item, .attachment-item { border: 1px solid var(--fd-border); border-radius: 10px; padding: 12px; background: #fff; }
+    .comment-meta { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 5px; font-size: 12px; color: var(--fd-muted); }
+    .attachment-list { display: grid; gap: 8px; margin-top: 12px; }
+    .attachment-item { display: flex; align-items: center; gap: 9px; }
+    .attachment-item strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .data-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .data-toolbar .input, .data-toolbar .filter { width: auto; min-width: 170px; }
+    .search-results { display: grid; gap: 8px; }
+    .search-result { width: 100%; display: grid; grid-template-columns: 38px minmax(0,1fr) auto; gap: 10px; align-items: center; padding: 11px; border: 1px solid var(--fd-border); border-radius: 10px; background: #fff; text-align: left; }
+    .search-result:hover { border-color: var(--fd-primary); background: var(--fd-primary-soft); }
+    .article-body { line-height: 1.7; color: var(--fd-text); }
+    .cal-cell[data-action] { cursor: pointer; }
+    .cal-cell[data-action]:hover { background: var(--fd-primary-soft); }
+    .compact-mode table th, .compact-mode table td { padding-top: 9px; padding-bottom: 9px; }
+    .status-note { display: inline-flex; align-items: center; gap: 7px; color: var(--fd-muted); font-size: 13px; }
+    .empty-inline { padding: 18px; color: var(--fd-muted); text-align: center; }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .receipt-note { grid-column: 1 / -1; padding: 10px 12px; border-radius: 8px; background: var(--fd-primary-soft); color: var(--fd-muted); font-size: 12px; }
+    @media (max-width: 700px) {
+      .data-toolbar .input, .data-toolbar .filter { width: 100%; }
+      .search-result { grid-template-columns: 34px minmax(0,1fr); }
+      .search-result > span:last-child { grid-column: 2; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <div id="modalRoot"></div>
+  <div id="toastRoot" class="toast-stack" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const STORAGE_KEY = "flowdesk-pro-interactive-v4";
+      const USERS = {
+        employee:   { name: "Aarav Mehta", role: "Employee", code: "EMP" },
+        manager:    { name: "Maya Sharma", role: "Manager", code: "MGR" },
+        hod:        { name: "Nikhil Rao", role: "Department Head", code: "HOD" },
+        hradmin:    { name: "Priya Nair", role: "HR Administrator", code: "HR" },
+        finance:    { name: "Vikram Shah", role: "Finance Administrator", code: "FIN" },
+        itagent:    { name: "Ananya Iyer", role: "IT Agent", code: "IT" },
+        assetadmin: { name: "Rohan Malhotra", role: "Asset Administrator", code: "AST" },
+        leader:     { name: "Sophia Walker", role: "Leadership", code: "LEAD" },
+        auditor:    { name: "Kabir Singh", role: "Auditor", code: "AUD" },
+        sysadmin:   { name: "System Administrator", role: "System Administrator", code: "SYS" }
+      };
+
+      const ICONS = {
+        dashboard: '<rect x="2" y="2" width="6" height="6" rx="1.5"></rect><rect x="10" y="2" width="6" height="6" rx="1.5"></rect><rect x="2" y="10" width="6" height="6" rx="1.5"></rect><rect x="10" y="10" width="6" height="6" rx="1.5"></rect>',
+        catalog: '<circle cx="9" cy="9" r="6.5"></circle><path d="M9 2.5v13M2.5 9h13"></path>',
+        requests: '<path d="M4.5 2.5h6l3 3v10h-9z"></path><path d="M6.5 9.5h5M6.5 12h5"></path>',
+        approvals: '<rect x="2.5" y="3.5" width="13" height="11.5" rx="2"></rect><path d="M2.5 10H6l1.3 2h3.4l1.3-2h3.5"></path>',
+        leave: '<rect x="2.5" y="3.5" width="13" height="12" rx="2"></rect><path d="M2.5 7.5h13M6 2v3M12 2v3"></path>',
+        helpdesk: '<rect x="2" y="3" width="14" height="9.5" rx="1.5"></rect><path d="M6.5 15.5h5M9 12.5v3"></path>',
+        timesheets: '<circle cx="9" cy="9" r="6.5"></circle><path d="M9 5.5V9l2.5 1.5"></path>',
+        assets: '<path d="M2.5 5.8L9 2.5l6.5 3.3v6.4L9 15.5l-6.5-3.3z"></path><path d="M2.5 5.8L9 9l6.5-3.2M9 9v6.5"></path>',
+        expenses: '<rect x="2" y="4" width="14" height="10" rx="2"></rect><path d="M2 7.5h14"></path>',
+        directory: '<circle cx="9" cy="6" r="3"></circle><path d="M3 15.5a6 6 0 0 1 12 0"></path>',
+        reports: '<path d="M4 15V9M9 15V4M14 15V7"></path>',
+        notifications: '<path d="M9 2.5a5 5 0 0 1 5 5v3l1.5 2.5h-13L4 10.5v-3a5 5 0 0 1 5-5z"></path><path d="M7.5 15a1.5 1.5 0 0 0 3 0"></path>',
+        ai: '<path d="M9 2.5l1.6 4.9 4.9 1.6-4.9 1.6L9 15.5l-1.6-4.9L2.5 9l4.9-1.6z"></path>',
+        knowledge: '<path d="M3 3.5h5.5A2.5 2.5 0 0 1 11 6v8H5.5A2.5 2.5 0 0 0 3 16.5z"></path><path d="M15 3.5h-4"></path>',
+        delegation: '<path d="M3 5h11l-2.5-2.5M15 13H4l2.5 2.5"></path>',
+        calendar: '<rect x="2.5" y="3.5" width="13" height="12" rx="2"></rect><path d="M2.5 7.5h13M6 2v3M12 2v3"></path>',
+        workflow: '<circle cx="4" cy="4" r="2"></circle><circle cx="14" cy="9" r="2"></circle><circle cx="4" cy="14" r="2"></circle><path d="M6 4h2a4 4 0 0 1 4 4v1M6 14h2a4 4 0 0 0 4-4V9"></path>',
+        admin: '<circle cx="9" cy="9" r="2.5"></circle><path d="M9 2.5v2M9 13.5v2M2.5 9h2M13.5 9h2M4.4 4.4l1.4 1.4M12.2 12.2l1.4 1.4M13.6 4.4l-1.4 1.4M5.8 12.2l-1.4 1.4"></path>',
+        lookups: '<path d="M4 4h10M4 9h10M4 14h10"></path><circle cx="2.5" cy="4" r=".5"></circle><circle cx="2.5" cy="9" r=".5"></circle><circle cx="2.5" cy="14" r=".5"></circle>',
+        roles: '<path d="M9 2.5l5.5 2v4.2c0 3.4-2.2 5.7-5.5 6.8-3.3-1.1-5.5-3.4-5.5-6.8V4.5z"></path><path d="M6.5 9l1.7 1.7 3.4-3.4"></path>',
+        users: '<circle cx="7" cy="6" r="2.5"></circle><path d="M2.5 15a4.5 4.5 0 0 1 9 0M12 5.5a2 2 0 0 1 0 4M13 11a4 4 0 0 1 2.5 4"></path>',
+        audit: '<circle cx="9" cy="9" r="6.5"></circle><path d="M9 5.5V9l2.7 1.7M5 2.5l-2 2"></path>',
+        modules: '<rect x="2.5" y="2.5" width="5" height="5" rx="1"></rect><rect x="10.5" y="2.5" width="5" height="5" rx="1"></rect><rect x="2.5" y="10.5" width="5" height="5" rx="1"></rect><rect x="10.5" y="10.5" width="5" height="5" rx="1"></rect>',
+        config: '<path d="M3 5.5h12M3 12.5h12"></path><circle cx="7" cy="5.5" r="1.8"></circle><circle cx="11.5" cy="12.5" r="1.8"></circle>',
+        profile: '<circle cx="9" cy="6" r="2.8"></circle><path d="M3.5 15.5a5.5 5.5 0 0 1 11 0"></path>',
+        search: '<circle cx="8" cy="8" r="5"></circle><path d="M11.8 11.8L15 15"></path>',
+        plus: '<path d="M9 4v10M4 9h10"></path>',
+        document: '<path d="M4.5 2.5h6l3 3v10h-9z"></path><path d="M6.5 9.5h5M6.5 12h5"></path>',
+        warning: '<path d="M9 2.5l7 12H2z"></path><path d="M9 6.5v4M9 12.8v.1"></path>',
+        success: '<circle cx="9" cy="9" r="6.5"></circle><path d="M6 9.2l2 2 4-4"></path>'
+      };
+      function icon(name, size = 18) {
+        return `<svg width="${size}" height="${size}" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ICONS.modules}</svg>`;
+      }
+
+      const MODULES = {
+        leave: { name: "Leave Management", icon: "L", route: "leave", page: 6 },
+        expenses: { name: "Expense Claims", icon: "E", route: "expenses", page: 7 },
+        assets: { name: "Asset Management", icon: "A", route: "assets", page: 8 },
+        timesheets: { name: "Timesheets", icon: "T", route: "timesheets", page: 10 },
+        helpdesk: { name: "IT Helpdesk", icon: "IT", route: "helpdesk", page: 11 }
+      };
+
+      const SERVICES = [
+        { module: "leave", title: "Apply for Leave", copy: "Annual, sick, casual or compensatory leave.", sla: "2 working days" },
+        { module: "leave", title: "Comp-Off Request", copy: "Claim time off for approved weekend work.", sla: "2 working days" },
+        { module: "helpdesk", title: "Report an IT Issue", copy: "Hardware, software, access or network support.", sla: "16 hours" },
+        { module: "helpdesk", title: "Software Licence", copy: "Request an approved paid software licence.", sla: "3 working days" },
+        { module: "timesheets", title: "Submit Timesheet", copy: "Record and submit weekly project hours.", sla: "Every Friday" },
+        { module: "assets", title: "Request New Asset", copy: "Laptop, monitor or workplace peripherals.", sla: "5 working days" },
+        { module: "expenses", title: "Expense Reimbursement", copy: "Claim approved business expenses.", sla: "5 working days" },
+        { module: "expenses", title: "Cash Advance", copy: "Request an advance for planned expenses.", sla: "3 working days" }
+      ];
+
+      const ASSET_SEED = [
+        { id:"FD-LAP-1042", name:"Lenovo ThinkPad T14", type:"Laptop", status:"Assigned", assigned:"12 Jan 2025", serial:"PF4K-82LX", warranty:"11 Jan 2028" },
+        { id:"FD-MON-0834", name:"Dell 27-inch Monitor", type:"Monitor", status:"Assigned", assigned:"12 Jan 2025", serial:"CN-0M27Q", warranty:"11 Jan 2028" },
+        { id:"FD-PHN-0418", name:"iPhone 15", type:"Phone", status:"Repair", assigned:"21 Jul 2026", serial:"F2LQ-15PM", warranty:"20 Jul 2027" }
+      ];
+
+      const KNOWLEDGE_ARTICLES = [
+        { title:"Leave policy 2026", summary:"Eligibility, balances and approval rules", category:"Leave", module:"leave", body:"Annual leave should normally be requested at least three working days in advance. Sick leave longer than two consecutive days requires supporting documentation. Your manager receives the first approval task." },
+        { title:"IT incident guide", summary:"How to report and prioritize service issues", category:"IT", module:"helpdesk", body:"Choose the category that best matches the issue, describe the business impact, and include the affected device or application. Select Critical only when work is completely blocked for multiple users." },
+        { title:"Expense reimbursement policy", summary:"Allowed categories and evidence requirements", category:"Finance", module:"expenses", body:"Submit expenses within 30 days. A receipt reference is required for claims above USD 25. Personal expenses, fines, and unapproved upgrades are not reimbursable." },
+        { title:"Asset handover checklist", summary:"Issue, return and condition confirmation", category:"Assets", module:"assets", body:"Back up business data, remove personal content, return accessories, and record the device condition. Asset Operations confirms receipt before the assignment is closed." },
+        { title:"Timesheet submission guide", summary:"Weekly deadlines and project allocation", category:"Timesheets", module:"timesheets", body:"Enter hours against the correct project and submit by Friday. A standard full-time week is 40 hours. Missing hours require a short note before submission." },
+        { title:"Approval delegation", summary:"Temporary coverage and out-of-office rules", category:"Platform", module:"", body:"Delegations require a delegate, date range, and scope. They affect new approval tasks during the selected period and never transfer administrator permissions." }
+      ];
+
+      const DIRECTORY_PEOPLE = Object.entries(USERS).filter(([,p]) => p.code !== "SYS").map(([key,p], index) => ({
+        key, name:p.name, role:p.role, code:p.code,
+        department:["Engineering","Operations","People","Finance"][index % 4],
+        location:["Delhi","Bengaluru","Mumbai"][index % 3],
+        email:`${p.name.toLowerCase().replace(/\s+/g,".")}@flowdesk.example`,
+        manager:index < 2 ? "Nikhil Rao" : "Maya Sharma"
+      }));
+
+      const DEFAULT_STATE = {
+        loggedIn: true,
+        user: "manager",
+        inboxView: "table",
+        selectedRequest: "FD/LV/2607/00042",
+        modules: { leave: true, expenses: true, assets: true, timesheets: true, helpdesk: true },
+        requests: [
+          { id: "FD/LV/2607/00042", title: "Annual Leave — 3 days", module: "leave", requester: "Aarav Mehta", date: "27 Jul 2026", owner: "Maya Sharma", status: "IN_REVIEW", amount: "", priority: "Normal" },
+          { id: "FD/IT/2607/00118", title: "VPN access unavailable", module: "helpdesk", requester: "Aarav Mehta", date: "26 Jul 2026", owner: "Ananya Iyer", status: "FULFILMENT", amount: "", priority: "High" },
+          { id: "FD/EX/2607/00031", title: "Client travel reimbursement", module: "expenses", requester: "Aarav Mehta", date: "24 Jul 2026", owner: "Vikram Shah", status: "APPROVED", amount: "USD 248.00", priority: "Normal" },
+          { id: "FD/AS/2607/00015", title: "27-inch monitor request", module: "assets", requester: "Aarav Mehta", date: "21 Jul 2026", owner: "Rohan Malhotra", status: "SENT_BACK", amount: "", priority: "Normal" },
+          { id: "FD/TS/2607/00009", title: "Timesheet — Week 30", module: "timesheets", requester: "Aarav Mehta", date: "18 Jul 2026", owner: "Maya Sharma", status: "CLOSED", amount: "", priority: "Normal" },
+          { id: "FD/EX/2607/00077", title: "Client visit expenses — USD 245", module: "expenses", requester: "Priya Nair", date: "27 Jul 2026", owner: "Maya Sharma", status: "IN_REVIEW", amount: "USD 245.00", priority: "Normal" },
+          { id: "FD/TS/2607/00203", title: "Timesheet — Week 13–19 Jul", module: "timesheets", requester: "Vikram Shah", date: "27 Jul 2026", owner: "Maya Sharma", status: "IN_REVIEW", amount: "", priority: "Normal" }
+        ],
+        notifications: [
+          { id: 1, title: "Approval required", copy: "Annual Leave — 3 days is waiting for your decision.", time: "8 min ago", read: false, route: "approvals" },
+          { id: 2, title: "SLA warning", copy: "VPN access ticket reaches its SLA in 2 hours.", time: "43 min ago", read: false, route: "helpdesk" },
+          { id: 3, title: "Request approved", copy: "Client travel reimbursement was approved.", time: "Yesterday", read: true, route: "requests" },
+          { id: 4, title: "Holiday reminder", copy: "Independence Day is on 15 August.", time: "2 days ago", read: true, route: "calendar" }
+        ],
+        audit: [
+          { time: "27 Jul, 10:42", actor: "Aarav Mehta", action: "SUBMIT", target: "FD/LV/2607/00042", detail: "Annual Leave submitted" },
+          { time: "27 Jul, 10:43", actor: "FlowDesk PRO", action: "ROUTE", target: "FD/LV/2607/00042", detail: "Assigned to Maya Sharma" },
+          { time: "26 Jul, 16:12", actor: "Ananya Iyer", action: "UPDATE", target: "FD/IT/2607/00118", detail: "Ticket moved to fulfilment" }
+        ],
+        aiMessages: [
+          { from: "assistant", text: "Hello. I can summarize your requests, explain policies, and help you find services. I cannot approve, reject, or make payments." }
+        ],
+        timesheet: {
+          week:"21–25 July 2026",
+          status:"DRAFT",
+          savedAt:"",
+          rows:[
+            { project:"FlowDesk PRO", billable:true, hours:[7.5,8,8,7,7] },
+            { project:"APEX Upgrade", billable:true, hours:[0,0,0,0,0] },
+            { project:"Internal Enablement", billable:false, hours:[0,0,0,0,1] }
+          ]
+        },
+        assets: ASSET_SEED.map(item => ({ ...item })),
+        delegations: [
+          { id:1, delegate:"Nikhil Rao", start:"2026-08-01", end:"2026-08-05", scope:"Leave approvals", reason:"Planned leave coverage", status:"SCHEDULED" }
+        ],
+        outOfOffice:false,
+        requestFilters:{ module:"", status:"" },
+        dashboardRange:"Last 30 days",
+        reportFilter:{ module:"", period:"30" },
+        calendarMonth:6,
+        comments:{},
+        attachments:{},
+        profiles:{},
+        preferences:{},
+        adminData:{
+          workflow:[
+            ["Leave approval","Leave","Manager → HOD","Active"],
+            ["High-value expense","Expenses","Manager → Finance","Active"],
+            ["Software licence","IT","Manager → IT","Active"]
+          ],
+          lookups:[
+            ["LEAVE_TYPE","8 values","Shared","Active"],
+            ["EXPENSE_CATEGORY","12 values","Finance","Active"],
+            ["ASSET_TYPE","9 values","Assets","Active"]
+          ],
+          roles:Object.values(USERS).map(x => [x.code,x.role,x.code === "SYS" ? "Full access" : "Role scope","Active"]),
+          users:Object.values(USERS).map(x => [x.name,x.role,x.code,"Active"]),
+          config:[
+            ["DEFAULT_CURRENCY","USD","System","Active"],
+            ["LEAVE_YEAR_START","01-JAN","System","Active"],
+            ["AI_ASSISTANT_ENABLED","Y","System","Active"]
+          ]
+        }
+      };
+
+      const NAV = [
+        { label: "", items: [
+          { route: "dashboard", label: "Dashboard", icon: "⌂", roles: "*" },
+          { route: "catalog", label: "Service Catalog", icon: "＋", roles: "*" },
+          { route: "requests", label: "My Requests", icon: "▤", roles: "*" },
+          { route: "approvals", label: "Approval Inbox", icon: "✓", roles: ["MGR","HOD","HR","FIN","IT","AST","SYS"] }
+        ]},
+        { label: "Modules", items: [
+          { route: "leave", label: "Leave", icon: "L", module: "leave", roles: "*" },
+          { route: "helpdesk", label: "IT Helpdesk", icon: "IT", module: "helpdesk", roles: "*" },
+          { route: "timesheets", label: "Timesheets", icon: "T", module: "timesheets", roles: "*" },
+          { route: "assets", label: "Assets", icon: "A", module: "assets", roles: "*" },
+          { route: "expenses", label: "Expenses", icon: "E", module: "expenses", roles: "*" }
+        ]},
+        { label: "Manage", items: [
+          { route: "reports", label: "Reports & Analytics", icon: "↗", roles: ["MGR","HOD","HR","FIN","IT","AST","LEAD","AUD","SYS"] },
+          { route: "ai", label: "AI Assistant", icon: "✦", roles: "*" },
+          { route: "directory", label: "Employee Directory", icon: "P", roles: ["MGR","HOD","HR","LEAD","SYS"] },
+          { route: "notifications", label: "Notifications", icon: "●", roles: "*" },
+          { route: "knowledge", label: "Policy & Knowledge", icon: "?", roles: "*" },
+          { route: "delegation", label: "Delegation & OOO", icon: "⇄", roles: "*" },
+          { route: "calendar", label: "Calendar & Holidays", icon: "□", roles: "*" }
+        ]},
+        { label: "Administration", items: [
+          { route: "workflow", label: "Workflow Rules", icon: "W", roles: ["SYS"] },
+          { route: "admin", label: "Admin Console", icon: "⚙", roles: ["SYS"] },
+          { route: "lookups", label: "Lookup Management", icon: "≡", roles: ["SYS"] },
+          { route: "roles", label: "Role Management", icon: "R", roles: ["SYS"] },
+          { route: "users", label: "User Management", icon: "U", roles: ["SYS"] },
+          { route: "audit", label: "Audit Trail", icon: "◉", roles: ["AUD","SYS"] },
+          { route: "modules", label: "Module Manager", icon: "M", roles: ["LEAD","AUD","SYS"] },
+          { route: "config", label: "Configuration", icon: "C", roles: ["SYS"] }
+        ]}
+      ];
+
+      const PAGE_META = {
+        dashboard: ["Dashboard", "Page 1", "Your FlowDesk workspace at a glance"],
+        catalog: ["Service Catalog", "Page 26", "Request services across all enabled modules"],
+        requests: ["My Requests", "Page 2", "Track your requests from draft to closure"],
+        approvals: ["Approval Inbox", "Page 4", "Review and act on requests assigned to you"],
+        request: ["Request Detail", "Page 5", "Request information, actions and workflow history"],
+        leave: ["Leave Management", "Page 6", "Balances, requests and team leave visibility"],
+        expenses: ["Expense Claims", "Page 7", "Claims, advances and reimbursement tracking"],
+        assets: ["Asset Management", "Page 8", "Assigned equipment and asset requests"],
+        timesheets: ["Timesheets", "Page 10", "Capture and submit weekly project hours"],
+        helpdesk: ["IT Helpdesk", "Page 11", "Report issues and track service tickets"],
+        directory: ["Employee Directory", "Page 12", "People, teams and organization details"],
+        reports: ["Reports & Analytics", "Page 13", "Operational performance and workflow insights"],
+        workflow: ["Workflow Rules", "Page 14", "Configurable routing and approval policy"],
+        notifications: ["Notifications", "Page 15", "Updates, reminders and action alerts"],
+        admin: ["Admin Console", "Page 16", "Platform administration and health"],
+        lookups: ["Lookup Management", "Page 17", "Maintain shared application values"],
+        roles: ["Role Management", "Page 18", "Roles, scopes and access policy"],
+        users: ["User Management", "Page 19", "Prototype users and role assignments"],
+        ai: ["AI Assistant", "Page 20", "Scope-aware assistance with safety controls"],
+        audit: ["Audit Trail", "Page 21", "Immutable history of prototype actions"],
+        knowledge: ["Policy & Knowledge Base", "Page 22", "Search policies, guides and FAQs"],
+        delegation: ["Delegation & Out-of-Office", "Page 23", "Manage temporary approval coverage"],
+        calendar: ["Calendar & Holidays", "Page 24", "Company holidays and team events"],
+        modules: ["Module Manager", "Page 27", "Enable, disable and preview module impact"],
+        config: ["Configuration Parameters", "Page 28", "Prototype platform settings"],
+        profile: ["My Profile", "Page 29", "Personal details and preferences"]
+      };
+
+      let state = loadState();
+      let sidebarOpen = false;
+      let currentModal = null;
+
+      function clone(value) { return JSON.parse(JSON.stringify(value)); }
+      function loadState() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+          return saved ? Object.assign(clone(DEFAULT_STATE), saved) : clone(DEFAULT_STATE);
+        } catch (_) {
+          return clone(DEFAULT_STATE);
+        }
+      }
+      function saveState() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) {}
+      }
+      function esc(value) {
+        return String(value ?? "").replace(/[&<>"']/g, char => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" }[char]));
+      }
+      function initials(name) {
+        return String(name).split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase();
+      }
+      function user() {
+        const base = USERS[state.user] || USERS.employee;
+        return Object.assign({}, base, state.profiles?.[state.user] || {});
+      }
+      function todayLabel() {
+        return new Date().toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
+      }
+      function nextRequestId(moduleKey) {
+        const prefix = { leave:"LV", helpdesk:"IT", timesheets:"TS", assets:"AS", expenses:"EX" }[moduleKey] || "RQ";
+        const largest = state.requests.reduce((max, request) => {
+          const value = Number(String(request.id).split("/").pop());
+          return Number.isFinite(value) ? Math.max(max, value) : max;
+        }, 42);
+        return `FD/${prefix}/2607/${String(largest + 1).padStart(5,"0")}`;
+      }
+      function formatDate(value) {
+        if (!value) return "Not provided";
+        const date = new Date(`${value}T12:00:00`);
+        return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
+      }
+      function commentsFor(id) { return state.comments[id] || []; }
+      function attachmentsFor(id) { return state.attachments[id] || []; }
+      function unreadCount() { return state.notifications.filter(item => !item.read).length; }
+      function requestInRoleScope(request) {
+        const code = user().code;
+        if (["MGR","HOD","SYS"].includes(code)) return true;
+        return (code === "HR" && request.module === "leave") ||
+          (code === "FIN" && request.module === "expenses") ||
+          (code === "IT" && request.module === "helpdesk") ||
+          (code === "AST" && request.module === "assets") ||
+          (code === "AUD" || code === "LEAD");
+      }
+      function pendingCount() { return state.requests.filter(item => ["SUBMITTED","IN_REVIEW"].includes(item.status) && requestInRoleScope(item)).length; }
+      function route() { return (location.hash.replace(/^#\/?/, "") || "dashboard").split("?")[0]; }
+      function allowed(item) { return item.roles === "*" || item.roles.includes(user().code); }
+      function statusLabel(status) { return status.replaceAll("_", " "); }
+      function moduleName(key) { return MODULES[key]?.name || key; }
+      function pageHead(key, actions = "") {
+        const meta = PAGE_META[key] || ["FlowDesk PRO", "", ""];
+        return `
+          <div class="page-head">
+            <div>
+              <div class="breadcrumb">FlowDesk PRO / ${esc(meta[1])}</div>
+              <h1>${esc(meta[0])}</h1>
+              <div class="subtle">${esc(meta[2])}</div>
+            </div>
+            ${actions ? `<div class="page-actions">${actions}</div>` : ""}
+          </div>`;
+      }
+      function pill(status) {
+        return `<span class="pill ${status.toLowerCase()}">${esc(statusLabel(status))}</span>`;
+      }
+      function toast(message, type = "") {
+        const node = document.createElement("div");
+        node.className = `toast ${type}`;
+        node.innerHTML = `<strong>${type === "success" ? "✓" : type === "error" ? "!" : "i"}</strong><span>${esc(message)}</span>`;
+        document.getElementById("toastRoot").appendChild(node);
+        setTimeout(() => node.remove(), 3300);
+      }
+      function addAudit(action, target, detail) {
+        state.audit.unshift({
+          time: new Date().toLocaleString("en-IN", { day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit" }),
+          actor: user().name,
+          action,
+          target,
+          detail
+        });
+      }
+      function navigate(target) {
+        closeModal();
+        sidebarOpen = false;
+        if (location.hash === `#/${target}`) render();
+        else location.hash = `#/${target}`;
+      }
+      function moduleEnabled(key) { return state.modules[key] !== false; }
+
+      function renderNav() {
+        return NAV.map(section => {
+          const items = section.items.filter(item => allowed(item) && !(item.module && !moduleEnabled(item.module)));
+          if (!items.length) return "";
+          return `
+            <section class="nav-section">
+              <div class="nav-label">${esc(section.label)}</div>
+              ${items.map(item => {
+                const count = item.route === "approvals" ? pendingCount() : 0;
+                return `<button class="nav-link ${route() === item.route ? "active" : ""}" data-action="nav" data-route="${item.route}">
+                  <span class="nav-icon">${icon(item.route)}</span>
+                  <span>${esc(item.label)}</span>
+                  ${count ? `<span class="nav-count">${count}</span>` : ""}
+                </button>`;
+              }).join("")}
+            </section>`;
+        }).join("");
+      }
+
+      function renderMobileNav() {
+        const items = [
+          ["dashboard", "Dashboard"],
+          ["requests", "Requests"],
+          ["catalog", "Catalog"],
+          ["approvals", "Inbox"],
+          ["profile", "Profile"]
+        ].filter(item => item[0] !== "approvals" || ["MGR","HOD","HR","FIN","IT","AST","SYS"].includes(user().code));
+        return `<nav class="mobile-nav" aria-label="Mobile navigation">${items.map(item => `
+          <button class="${route() === item[0] ? "active" : ""}" data-action="nav" data-route="${item[0]}">
+            <b>${icon(item[0], 20)}</b><span>${item[1]}</span>
+          </button>`).join("")}</nav>`;
+      }
+
+      function renderShell(content) {
+        const u = user();
+        document.getElementById("root").innerHTML = `
+          <div class="app ${sidebarOpen ? "sidebar-open" : ""} ${state.preferences?.[state.user]?.compact ? "compact-mode" : ""}" id="app">
+            <aside class="sidebar" aria-label="Main navigation">
+              <div class="brand">
+                <div class="brand-mark">F</div>
+                <div class="brand-name">FlowDesk</div>
+                <div class="pro-badge">PRO</div>
+              </div>
+              <nav class="nav-scroll">${renderNav()}</nav>
+              <button class="sidebar-profile" data-action="nav" data-route="profile">
+                <span class="avatar">${initials(u.name)}</span>
+                <span class="profile-text">
+                  <span class="profile-name">${esc(u.name)}</span>
+                  <span class="profile-role">${esc(u.role)}</span>
+                </span>
+                <span>›</span>
+              </button>
+            </aside>
+            <button class="mobile-overlay" data-action="close-sidebar" aria-label="Close navigation"></button>
+            <section class="shell">
+              <header class="topbar">
+                <button class="mobile-brand" data-action="toggle-sidebar" aria-label="Open navigation">F</button>
+                <button class="icon-btn menu-btn" data-action="toggle-sidebar" aria-label="Open navigation">☰</button>
+                <label class="search-box">
+                  <span>${icon("search", 16)}</span>
+                  <input id="globalSearch" type="search" placeholder="Search requests, people, services…" aria-label="Global search">
+                </label>
+                <button class="icon-btn mobile-search" data-action="search-mobile" aria-label="Search">${icon("search", 20)}</button>
+                <div class="top-actions">
+                  <button class="btn btn-primary top-new" data-action="new-request">${icon("plus", 16)}<span>New Request</span></button>
+                  <div class="notification-wrap">
+                    <button class="icon-btn" data-action="nav" data-route="notifications" aria-label="Notifications">${icon("notifications", 20)}</button>
+                    ${unreadCount() ? `<span class="notification-dot">${unreadCount()}</span>` : ""}
+                  </div>
+                  <button class="icon-btn profile-top" data-action="profile-menu" aria-label="Profile menu">${initials(u.name)}</button>
+                </div>
+              </header>
+              <main class="content" id="content">${content}</main>
+              ${renderMobileNav()}
+            </section>
+          </div>`;
+      }
+
+      function renderLogin() {
+        const u = USERS[state.user] || USERS.manager;
+        document.getElementById("root").innerHTML = `
+          <main class="login">
+            <section class="login-card">
+              <div class="login-brand">
+                <div class="brand" style="border:0;padding:0">
+                  <div class="brand-mark" style="color:var(--fd-primary);background:white">F</div>
+                  <div class="brand-name">FlowDesk</div>
+                  <div class="pro-badge" style="color:white;background:rgba(255,255,255,.18)">PRO</div>
+                </div>
+                <h1>Every request.<br>One flow.</h1>
+                <p>Workflow, approvals and employee services in one connected enterprise workspace.</p>
+              </div>
+              <form class="login-form" id="loginForm">
+                <h1>Welcome back</h1>
+                <p class="subtle">Choose a demo user and sign in to the prototype.</p>
+                <div class="form-field" style="margin-top:24px">
+                  <label for="loginUser">Demo user</label>
+                  <select class="input" id="loginUser" name="user">
+                    ${Object.entries(USERS).map(([key, value]) => `<option value="${key}" ${state.user === key ? "selected" : ""}>${esc(value.name)} — ${esc(value.role)}</option>`).join("")}
+                  </select>
+                </div>
+                <div class="form-field" style="margin-top:15px">
+                  <label for="loginPassword">Password</label>
+                  <input class="input" id="loginPassword" type="password" value="FlowDesk@123" autocomplete="current-password">
+                  <div class="form-hint">Prototype-only password: FlowDesk@123</div>
+                </div>
+                <button class="btn btn-primary" style="width:100%;margin-top:22px" type="submit">Sign in</button>
+                <div class="callout" style="margin-top:20px"><b>i</b><span>This is a local browser prototype. It does not connect to Oracle APEX or a production database.</span></div>
+              </form>
+            </section>
+          </main>`;
+      }
+
+      function renderDashboard() {
+        const approverRole = ["MGR","HOD","HR","FIN","IT","AST","SYS"].includes(user().code);
+        const scoped = approverRole ? state.requests : state.requests.filter(r => r.requester === user().name);
+        const approved = scoped.filter(r => ["APPROVED","CLOSED"].includes(r.status)).length;
+        const inFlight = scoped.filter(r => ["SUBMITTED","IN_REVIEW","FULFILMENT"].includes(r.status)).length;
+        const attention = scoped.filter(r => approverRole ? ["SUBMITTED","IN_REVIEW"].includes(r.status) : ["FULFILMENT","SENT_BACK"].includes(r.status)).slice(0, 4);
+        const stats = [
+          ["document", scoped.filter(r => !["CLOSED","CANCELLED","REJECTED"].includes(r.status)).length, "My Open Requests", "+2 this week", "purple"],
+          ["approvals", approverRole ? pendingCount() : 0, "Pending My Approval", approverRole ? "+5 today" : "No action", "purple"],
+          ["warning", Math.max(1, inFlight - 1), "SLA At Risk", "−1 vs last week", "warning"],
+          ["success", approved, "Closed This Month", "+12%", "success"]
+        ];
+        return `<div class="page">
+          <div class="page-head dashboard-head">
+            <div><h1>Good morning, ${esc(user().name.split(" ")[0])}</h1><div class="subtle">Monday, 27 July 2026 · ${pendingCount() + unreadCount()} items need your attention</div></div>
+            <div class="page-actions"><button class="btn" data-action="dashboard-range">${icon("calendar",16)} ${esc(state.dashboardRange || "Last 30 days")} ▾</button></div>
+          </div>
+          <div class="grid grid-4">
+            ${stats.map(item => `<div class="card stat simple-stat ${item[4]}"><div class="stat-icon">${icon(item[0],18)}</div><span class="stat-trend">${item[3]}</span><div class="stat-value">${item[1]}</div><div class="stat-label">${item[2]}</div></div>`).join("")}
+          </div>
+          <div class="dashboard-main">
+            <section class="card table-card">
+              <div class="table-toolbar"><h2 style="margin:0">Awaiting Your Action</h2><button class="text-action" style="margin-left:auto" data-action="nav" data-route="approvals">View all ${pendingCount()}</button></div>
+              <div class="attention-list">
+                ${attention.length ? attention.map((req, index) => `<div class="attention-row">
+                  <span class="avatar">${initials(req.requester)}</span>
+                  <div><strong>${esc(req.title)}</strong><div class="subtle">${esc(req.id)} · ${esc(req.requester)}</div></div>
+                  <div class="attention-meta"><span class="module-pill">${esc(moduleName(req.module).replace(" Management",""))}</span><span class="sla-state ${index === 1 ? "risk" : ""}"><i></i>${index === 1 ? "At Risk" : "On Track"}</span></div>
+                  <div class="attention-actions">${approverRole ? `<button class="text-action" data-action="request-action" data-id="${esc(req.id)}" data-request-action="approve">Approve</button><button class="text-action danger" data-action="request-action" data-id="${esc(req.id)}" data-request-action="reject">Reject</button>` : `<button class="text-action" data-action="open-request" data-id="${esc(req.id)}">View request</button>`}</div>
+                </div>`).join("") : `<div class="empty"><div class="empty-icon">✓</div><h2>All caught up</h2><div class="subtle">No requests are waiting for your action.</div></div>`}
+              </div>
+            </section>
+            <aside class="card status-card">
+                <div class="card-head"><h2>Request Status Mix</h2></div>
+                <div class="status-ring-wrap">
+                  <svg width="150" height="150" viewBox="0 0 164 164" aria-label="Request status chart"><g transform="rotate(-90 82 82)"><circle cx="82" cy="82" r="60" fill="none" stroke="#22A06B" stroke-width="22" stroke-dasharray="152.4 377"></circle><circle cx="82" cy="82" r="60" fill="none" stroke="#E8A33D" stroke-width="22" stroke-dasharray="80.2 377" stroke-dashoffset="-152.4"></circle><circle cx="82" cy="82" r="60" fill="none" stroke="#2DCCFF" stroke-width="22" stroke-dasharray="64.1 377" stroke-dashoffset="-232.6"></circle><circle cx="82" cy="82" r="60" fill="none" stroke="#6E39CB" stroke-width="22" stroke-dasharray="48.1 377" stroke-dashoffset="-296.7"></circle><circle cx="82" cy="82" r="60" fill="none" stroke="#F93131" stroke-width="22" stroke-dasharray="32.2 377" stroke-dashoffset="-344.8"></circle></g></svg>
+                  <div class="status-ring-label"><strong>${state.requests.length}</strong><span class="subtle">requests</span></div>
+                </div>
+                <div class="status-legend">
+                  <div class="status-legend-row"><span class="legend-dot" style="background:#22A06B"></span>Approved<strong>${approved}</strong></div>
+                  <div class="status-legend-row"><span class="legend-dot" style="background:#E8A33D"></span>In Review<strong>${state.requests.filter(r => r.status === "IN_REVIEW").length}</strong></div>
+                  <div class="status-legend-row"><span class="legend-dot" style="background:#2DCCFF"></span>Submitted<strong>${state.requests.filter(r => r.status === "SUBMITTED").length}</strong></div>
+                  <div class="status-legend-row"><span class="legend-dot" style="background:#6E39CB"></span>Fulfilment<strong>${state.requests.filter(r => r.status === "FULFILMENT").length}</strong></div>
+                </div>
+            </aside>
+          </div>
+          <div class="card trend-card">
+            <div class="card-head"><h2>Requests Over Time</h2></div>
+            <svg width="100%" height="180" viewBox="0 0 400 150" preserveAspectRatio="none" style="display:block"><line x1="0" y1="10" x2="400" y2="10" stroke="#EDEEF2"></line><line x1="0" y1="70" x2="400" y2="70" stroke="#EDEEF2"></line><line x1="0" y1="140" x2="400" y2="140" stroke="#E7E8EB"></line><path d="M0,110 C60,96 110,66 170,74 C230,82 290,44 400,40 L400,140 L0,140 Z" fill="#6E39CB" opacity="0.10"></path><path d="M0,110 C60,96 110,66 170,74 C230,82 290,44 400,40" fill="none" stroke="#6E39CB" stroke-width="2.5" vector-effect="non-scaling-stroke"></path></svg>
+            <div style="display:flex;justify-content:space-between;margin-top:6px" class="subtle"><span>28 Jun</span><span>12 Jul</span><span>27 Jul</span></div>
+          </div>
+        </div>`;
+      }
+
+      function requestTable(requests, actionMode = false) {
+        if (!requests.length) return `<div class="empty"><div class="empty-icon">✓</div><h2>Nothing to show</h2><div class="subtle">No requests match the current view.</div></div>`;
+        return `<div class="table-scroll"><table class="responsive-table">
+          <thead><tr><th>Request</th><th>Module</th><th>Requester</th><th>Submitted</th><th>Owner</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>${requests.map(r => `<tr data-action="open-request" data-id="${esc(r.id)}">
+            <td data-label="Request"><strong>${esc(r.title)}</strong><small>${esc(r.id)}</small></td>
+            <td data-label="Module"><span class="module-pill">${esc(moduleName(r.module).replace(" Management",""))}</span></td>
+            <td data-label="Requester">${esc(r.requester)}</td><td data-label="Submitted">${esc(r.date)}</td><td data-label="Owner">${esc(r.owner)}</td><td data-label="Status">${pill(r.status)}</td>
+            <td data-label="Action" class="request-action-cell">${actionMode && ["SUBMITTED","IN_REVIEW"].includes(r.status) ? `<button class="btn btn-sm btn-primary" data-action="request-action" data-id="${esc(r.id)}" data-request-action="approve">Approve</button><button class="btn btn-sm" style="color:var(--fd-danger)" data-action="request-action" data-id="${esc(r.id)}" data-request-action="reject">Reject</button>` : `<button class="btn btn-sm" data-action="open-request" data-id="${esc(r.id)}">View request</button>`}</td>
+          </tr>`).join("")}</tbody>
+        </table></div>`;
+      }
+
+      function renderRequests() {
+        const current = state.requestTab || "ALL";
+        const tabRows = current === "DRAFT" ? state.requests.filter(r => r.status === "DRAFT")
+          : current === "AWAITING" ? state.requests.filter(r => ["SUBMITTED","IN_REVIEW","SENT_BACK","FULFILMENT"].includes(r.status))
+          : current === "COMPLETED" ? state.requests.filter(r => ["APPROVED","CLOSED"].includes(r.status))
+          : state.requests;
+        const filters = state.requestFilters || { module:"", status:"" };
+        const filtered = tabRows.filter(r =>
+          (!filters.module || r.module === filters.module) &&
+          (!filters.status || r.status === filters.status)
+        );
+        const tabs = [["ALL",`All ${state.requests.length}`],["DRAFT",`Drafts ${state.requests.filter(r => r.status === "DRAFT").length}`],["AWAITING",`Awaiting ${state.requests.filter(r => ["SUBMITTED","IN_REVIEW","SENT_BACK","FULFILMENT"].includes(r.status)).length}`],["COMPLETED",`Completed ${state.requests.filter(r => ["APPROVED","CLOSED"].includes(r.status)).length}`]];
+        return `<div class="page">
+          ${pageHead("requests", `<button class="btn" data-action="export" data-kind="requests">Export</button><button class="btn btn-primary" data-action="new-request">＋ New Request</button>`)}
+          <div class="request-tabs">${tabs.map(tab => `<button class="request-tab ${current === tab[0] ? "active" : ""}" data-action="request-tab" data-tab="${tab[0]}">${tab[1]}</button>`).join("")}</div>
+          <div class="card table-card request-table-card">
+            <div class="table-toolbar">
+              <select class="filter" id="requestModuleFilter" aria-label="Filter by module"><option value="">All modules</option>${Object.entries(MODULES).map(([k,m]) => `<option value="${k}" ${filters.module === k ? "selected" : ""}>${esc(m.name)}</option>`).join("")}</select>
+              <select class="filter" id="requestStatusFilter" aria-label="Filter by status"><option value="">All statuses</option>${["DRAFT","SUBMITTED","IN_REVIEW","APPROVED","SENT_BACK","FULFILMENT","CLOSED","REJECTED","CANCELLED"].map(s => `<option value="${s}" ${filters.status === s ? "selected" : ""}>${statusLabel(s)}</option>`).join("")}</select>
+              ${(filters.module || filters.status) ? `<button class="btn btn-sm" data-action="clear-request-filters">Clear filters</button>` : ""}
+              <span class="subtle" style="margin-left:auto">${filtered.length} requests</span>
+            </div>
+            <div id="requestTable">${requestTable(filtered)}</div>
+          </div>
+        </div>`;
+      }
+
+      function renderCatalog() {
+        return `<div class="page">
+          ${pageHead("catalog", `<button class="btn btn-primary" data-action="new-request">＋ New Request</button>`)}
+          <div class="callout" style="margin-bottom:18px"><b>i</b><span>Select a service to open a pre-filled request. Services from disabled modules are removed automatically.</span></div>
+          <div class="catalog-grid">
+            ${SERVICES.map((service, index) => ({ service, index })).filter(item => moduleEnabled(item.service.module)).map(({ service, index }) => {
+              return `<article class="service-card">
+                <div class="service-icon">${icon(service.module)}</div>
+                <div class="service-title">${esc(service.title)}</div>
+                <div class="service-copy">${esc(service.copy)}</div>
+                <div class="service-foot"><span class="module-pill">${esc(MODULES[service.module].name)}</span><button class="btn btn-sm btn-soft" data-action="new-request" data-service="${index}">Request →</button></div>
+              </article>`;
+            }).join("")}
+          </div>
+        </div>`;
+      }
+
+      function renderApprovals() {
+        const pending = state.requests.filter(r => ["SUBMITTED","IN_REVIEW"].includes(r.status) && requestInRoleScope(r));
+        return `<div class="page">
+          ${pageHead("approvals", `<div class="segmented"><button class="${state.inboxView === "table" ? "active" : ""}" data-action="inbox-view" data-view="table">Table</button><button class="${state.inboxView === "board" ? "active" : ""}" data-action="inbox-view" data-view="board">Board</button></div>`)}
+          <div class="grid grid-2" style="margin-bottom:16px">
+            <div class="card stat simple-stat"><div class="stat-value">${pending.length}</div><div class="stat-label">Pending my approval</div></div>
+            <div class="card stat simple-stat"><div class="stat-value" style="color:var(--fd-danger)">${pending.filter(r => r.priority === "Urgent").length}</div><div class="stat-label">Overdue</div></div>
+          </div>
+          ${state.inboxView === "table"
+            ? `<div class="card table-card request-table-card"><div class="table-toolbar"><span class="subtle">${pending.length} requests awaiting review · sorted by SLA</span></div>${requestTable(pending, true)}</div>`
+            : `<div class="board">
+                ${["SUBMITTED","IN_REVIEW","SENT_BACK"].map(status => {
+                  const rows = state.requests.filter(r => r.status === status && requestInRoleScope(r));
+                  return `<section class="board-col"><div class="board-title"><span>${statusLabel(status)}</span><span>${rows.length}</span></div>${rows.length ? rows.map(r => `<article class="board-card"><strong>${esc(r.title)}</strong><div class="subtle" style="margin-top:3px">${esc(r.id)} · ${esc(r.requester)}</div><button class="btn btn-sm btn-soft" data-action="open-request" data-id="${esc(r.id)}">Review</button></article>`).join("") : `<div class="subtle" style="padding:20px 4px">No requests</div>`}</section>`;
+                }).join("")}
+              </div>`}
+        </div>`;
+      }
+
+      function requestDetailRows(req) {
+        const d = req.details || {};
+        const common = [
+          ["Requester", req.requester],
+          ["Module", moduleName(req.module)],
+          [req.status === "DRAFT" ? "Created" : "Submitted", req.date],
+          ["Current owner", req.owner || "Not assigned"]
+        ];
+        const specific = {
+          leave:[
+            ["Leave type", d.leaveType || "Annual leave"],
+            ["Date range", d.start && d.end ? `${formatDate(d.start)} – ${formatDate(d.end)}` : "3 days"],
+            ["Day option", d.dayOption || "Full day"],
+            ["Handover contact", d.handover || "Not provided"]
+          ],
+          helpdesk:[
+            ["Category", d.category || "Access & connectivity"],
+            ["Impact", d.impact || "Individual user"],
+            ["Urgency", d.urgency || req.priority || "Normal"],
+            ["Affected item", d.device || d.service || "Not provided"]
+          ],
+          timesheets:[
+            ["Week", d.week || state.timesheet.week],
+            ["Project", d.project || "Multiple projects"],
+            ["Total hours", d.total ? `${d.total} hours` : "38.5 hours"],
+            ["Billable", d.billable || "32 hours"]
+          ],
+          assets:[
+            ["Asset type", d.assetType || "Monitor"],
+            ["Quantity", d.quantity || "1"],
+            ["Required by", formatDate(d.requiredDate)],
+            ["Delivery location", d.location || "Delhi office"]
+          ],
+          expenses:[
+            ["Claim type", d.claimType || "Reimbursement"],
+            ["Category", d.category || "Business travel"],
+            ["Expense date", formatDate(d.expenseDate)],
+            ["Merchant", d.merchant || "Not provided"],
+            ["Amount", req.amount || "Not provided"],
+            ["Receipt", d.receipt || "No receipt attached"]
+          ]
+        }[req.module] || [];
+        return [...common, ...specific].map(([label,value]) => `<div><div class="field-label">${esc(label)}</div><div class="field-value">${esc(value || "Not provided")}</div></div>`).join("");
+      }
+
+      function requestActionButtons(req) {
+        const buttons = [`<button class="btn" data-action="nav" data-route="requests">← Back</button>`];
+        const approver = ["MGR","HOD","HR","FIN","IT","AST","SYS"].includes(user().code) && requestInRoleScope(req);
+        const fulfiller = ["FIN","IT","AST","SYS"].includes(user().code);
+        const requester = req.requester === user().name;
+        if (requester && ["DRAFT","SENT_BACK"].includes(req.status)) {
+          buttons.push(`<button class="btn" data-action="edit-request" data-id="${esc(req.id)}">Edit</button>`);
+          buttons.push(`<button class="btn btn-primary" data-action="request-action" data-id="${esc(req.id)}" data-request-action="submit">Submit</button>`);
+        }
+        if (requester && ["DRAFT","SUBMITTED","IN_REVIEW","SENT_BACK"].includes(req.status)) {
+          buttons.push(`<button class="btn btn-danger" data-action="request-action" data-id="${esc(req.id)}" data-request-action="cancel">Cancel request</button>`);
+        }
+        if (approver && ["SUBMITTED","IN_REVIEW"].includes(req.status)) {
+          buttons.push(`<button class="btn" data-action="request-action" data-id="${esc(req.id)}" data-request-action="send_back">Send Back</button>`);
+          buttons.push(`<button class="btn btn-danger" data-action="request-action" data-id="${esc(req.id)}" data-request-action="reject">Reject</button>`);
+          buttons.push(`<button class="btn btn-primary" data-action="request-action" data-id="${esc(req.id)}" data-request-action="approve">Approve</button>`);
+        }
+        if (fulfiller && req.status === "APPROVED") {
+          buttons.push(`<button class="btn btn-primary" data-action="request-action" data-id="${esc(req.id)}" data-request-action="fulfil">Start fulfilment</button>`);
+        }
+        if (fulfiller && req.status === "FULFILMENT") {
+          buttons.push(`<button class="btn btn-danger" data-action="request-action" data-id="${esc(req.id)}" data-request-action="reject">Reject</button>`);
+          buttons.push(`<button class="btn btn-primary" data-action="request-action" data-id="${esc(req.id)}" data-request-action="close">Close request</button>`);
+        }
+        return buttons.join("");
+      }
+
+      function requestTimeline(req) {
+        const savedHistory = req.history || [];
+        const base = [
+          { label:"Request created", note:`${req.date} · ${req.requester}`, done:true },
+          { label:req.status === "DRAFT" ? "Draft saved" : "Submitted", note:req.status === "DRAFT" ? "Waiting for submission" : "Policy validation completed", done:req.status !== "DRAFT" },
+          { label:"Approval review", note:["SUBMITTED","IN_REVIEW"].includes(req.status) ? `Waiting for ${req.owner}` : statusLabel(req.status), done:["APPROVED","FULFILMENT","CLOSED"].includes(req.status) },
+          { label:"Completion", note:req.status === "CLOSED" ? "Request completed" : "Pending previous stage", done:req.status === "CLOSED" }
+        ];
+        const items = savedHistory.length ? savedHistory.map(item => ({ label:item.action, note:`${item.time} · ${item.actor}`, done:true })) : base;
+        return items.map(item => `<div class="timeline-item ${item.done ? "" : "pending"}"><span class="timeline-dot">${item.done ? "✓" : "•"}</span><strong>${esc(item.label)}</strong><div class="subtle">${esc(item.note)}</div></div>`).join("");
+      }
+
+      function renderRequestDetail() {
+        const req = state.requests.find(item => item.id === state.selectedRequest) || state.requests[0];
+        if (!req) return renderRequests();
+        const comments = commentsFor(req.id);
+        const attachments = attachmentsFor(req.id);
+        return `<div class="page">
+          ${pageHead("request", requestActionButtons(req))}
+          <div class="grid split">
+            <div class="grid">
+              <section class="card">
+                <div class="card-head"><div><h2>${esc(req.title)}</h2><div class="subtle">${esc(req.id)}</div></div>${pill(req.status)}</div>
+                <div class="detail-grid">${requestDetailRows(req)}</div>
+                <div style="margin-top:22px"><div class="field-label">${req.module === "helpdesk" ? "Issue description" : req.module === "expenses" ? "Business purpose" : "Reason / notes"}</div><p style="margin:7px 0 0">${esc(req.reason || req.details?.description || "No additional information was provided.")}</p></div>
+              </section>
+              <section class="card">
+                <div class="card-head"><h2>Comments & attachments</h2><div class="btn-row"><button class="btn btn-sm" data-action="attach-file" data-id="${esc(req.id)}">Add attachment</button><button class="btn btn-sm btn-soft" data-action="add-comment" data-id="${esc(req.id)}">Add comment</button></div></div>
+                <div class="comment-list">${comments.length ? comments.map(item => `<div class="comment-item"><div class="comment-meta"><strong>${esc(item.author)}</strong><span>${esc(item.time)}</span></div><div>${esc(item.text)}</div></div>`).join("") : `<div class="empty-inline">No comments yet.</div>`}</div>
+                <div class="attachment-list">${attachments.length ? attachments.map(item => `<div class="attachment-item">${icon("document",16)}<strong>${esc(item.name)}</strong><span class="subtle" style="margin-left:auto">${esc(item.addedBy)}</span></div>`).join("") : `<div class="callout"><b>i</b><span>No attachments have been added. Files are represented by name in this standalone prototype.</span></div>`}</div>
+              </section>
+            </div>
+            <aside class="card">
+              <div class="card-head"><h2>Workflow timeline</h2></div>
+              <div class="timeline">${requestTimeline(req)}</div>
+            </aside>
+          </div>
+        </div>`;
+      }
+
+      function moduleDisabledPage(key) {
+        return `<div class="page">${pageHead(key)}<div class="card empty"><div class="empty-icon">!</div><h2>${esc(MODULES[key].name)} is disabled</h2><p class="subtle">New entry points are blocked. Historical requests remain visible and auditable.</p>${user().code === "SYS" ? `<button class="btn btn-primary" data-action="nav" data-route="modules">Open Module Manager</button>` : `<button class="btn" data-action="nav" data-route="dashboard">Return to Dashboard</button>`}</div></div>`;
+      }
+
+      function renderLeave() {
+        if (!moduleEnabled("leave")) return moduleDisabledPage("leave");
+        return `<div class="page">
+          ${pageHead("leave", `<button class="btn btn-primary" data-action="new-request" data-module="leave">Apply for Leave</button>`)}
+          <div class="grid grid-4">
+            ${[["Annual",12,"of 18 days"],["Sick",6,"of 8 days"],["Casual",3,"of 6 days"],["Comp-Off",1,"expires 31 Aug"]].map(x => `<div class="balance"><span class="subtle">${x[0]}</span><strong>${x[1]}</strong><small>${x[2]}</small></div>`).join("")}
+          </div>
+          <div class="grid split" style="margin-top:18px">
+            <div class="card table-card"><div class="table-toolbar"><h2 style="margin:0">Leave requests</h2></div>${requestTable(state.requests.filter(r => r.module === "leave"))}</div>
+            <div class="card"><div class="card-head"><h2>Policy summary</h2></div><div class="activity-list"><div class="activity"><span class="activity-dot">1</span><div><div class="activity-title">Annual leave</div><div class="activity-copy">Apply at least 3 days in advance</div></div></div><div class="activity"><span class="activity-dot">2</span><div><div class="activity-title">Sick leave</div><div class="activity-copy">Medical document required after 2 days</div></div></div><div class="activity"><span class="activity-dot">3</span><div><div class="activity-title">Approval SLA</div><div class="activity-copy">2 working days</div></div></div></div></div>
+          </div>
+        </div>`;
+      }
+
+      function renderHelpdesk() {
+        if (!moduleEnabled("helpdesk")) return moduleDisabledPage("helpdesk");
+        return `<div class="page">
+          ${pageHead("helpdesk", `<button class="btn btn-primary" data-action="new-request" data-module="helpdesk">Report IT Issue</button>`)}
+          <div class="grid grid-4">${[["Open tickets",3],["Due today",2],["Within SLA","94%"],["Avg. resolution","6.2h"]].map(x => `<div class="card stat"><div class="stat-icon">${icon("helpdesk")}</div><div class="stat-value">${x[1]}</div><div class="stat-label">${x[0]}</div></div>`).join("")}</div>
+          <div class="card table-card" style="margin-top:18px"><div class="table-toolbar"><h2 style="margin:0">Support tickets</h2></div>${requestTable(state.requests.filter(r => r.module === "helpdesk"), user().code === "IT")}</div>
+        </div>`;
+      }
+
+      function timesheetTotals() {
+        const rows = state.timesheet.rows || [];
+        const total = rows.reduce((sum,row) => sum + row.hours.reduce((a,b) => a + Number(b || 0), 0), 0);
+        const billable = rows.filter(row => row.billable).reduce((sum,row) => sum + row.hours.reduce((a,b) => a + Number(b || 0), 0), 0);
+        return { total, billable, nonBillable:total - billable, missing:Math.max(0, 40 - total) };
+      }
+
+      function renderTimesheets() {
+        if (!moduleEnabled("timesheets")) return moduleDisabledPage("timesheets");
+        const totals = timesheetTotals();
+        const submitted = state.timesheet.status === "SUBMITTED";
+        return `<div class="page">
+          ${pageHead("timesheets", `<button class="btn" data-action="save-timesheet" ${submitted ? "disabled" : ""}>Save Draft</button><button class="btn btn-primary" data-action="submit-timesheet" ${submitted ? "disabled" : ""}>${submitted ? "Submitted" : "Submit Week"}</button>`)}
+          <div class="grid grid-4">
+            ${[["Week total",`${totals.total.toFixed(1)}h`,"ts-total"],["Billable",`${totals.billable.toFixed(1)}h`,"ts-billable"],["Non-billable",`${totals.nonBillable.toFixed(1)}h`,"ts-nonbillable"],["Missing",`${totals.missing.toFixed(1)}h`,"ts-missing"]].map(x => `<div class="card stat"><div class="stat-icon">${icon("timesheets")}</div><div class="stat-value" id="${x[2]}">${x[1]}</div><div class="stat-label">${x[0]}</div></div>`).join("")}
+          </div>
+          <div class="card table-card" style="margin-top:18px">
+            <div class="table-toolbar"><div><h2 style="margin:0">${esc(state.timesheet.week)}</h2><div class="subtle">${submitted ? "Submitted to Maya Sharma" : state.timesheet.savedAt ? `Draft saved ${esc(state.timesheet.savedAt)}` : "Enter hours for each project"}</div></div><span class="module-pill" style="margin-left:auto">${esc(state.timesheet.status)}</span></div>
+            <div class="table-scroll"><div class="week-grid">
+              ${["Project / Activity","Mon","Tue","Wed","Thu","Fri","Total"].map(x => `<div>${x}</div>`).join("")}
+              ${state.timesheet.rows.map((row,i) => `<div><strong>${esc(row.project)}</strong><small style="display:block;color:var(--fd-muted)">${row.billable ? "Billable" : "Non-billable"}</small></div>${row.hours.map((value,day) => `<div><input class="timesheet-hour" type="number" value="${Number(value)}" min="0" max="24" step=".5" data-row="${i}" data-day="${day}" aria-label="${esc(row.project)} ${["Monday","Tuesday","Wednesday","Thursday","Friday"][day]} hours" ${submitted ? "disabled" : ""}></div>`).join("")}<div><strong id="ts-row-${i}">${row.hours.reduce((a,b) => a + Number(b || 0),0).toFixed(1)}</strong></div>`).join("")}
+            </div></div>
+          </div>
+        </div>`;
+      }
+
+      function renderAssets() {
+        if (!moduleEnabled("assets")) return moduleDisabledPage("assets");
+        return `<div class="page">${pageHead("assets", `<button class="btn btn-primary" data-action="new-request" data-module="assets">Request Asset</button>`)}
+          <div class="grid grid-3">${[["Assigned to me",state.assets.filter(a => a.status === "Assigned").length],["Open requests",state.requests.filter(r => r.module === "assets" && !["CLOSED","CANCELLED","REJECTED"].includes(r.status)).length],["Warranty alerts",state.assets.filter(a => /2027/.test(a.warranty)).length]].map(x => `<div class="card stat"><div class="stat-icon">${icon("assets")}</div><div class="stat-value">${x[1]}</div><div class="stat-label">${x[0]}</div></div>`).join("")}</div>
+          <div class="card table-card" style="margin-top:18px"><div class="table-toolbar"><h2 style="margin:0">My assets</h2></div><div class="table-scroll"><table><thead><tr><th>Asset ID</th><th>Asset</th><th>Status</th><th>Assigned</th><th>Action</th></tr></thead><tbody>${state.assets.map(asset => `<tr><td><strong>${esc(asset.id)}</strong></td><td>${esc(asset.name)}</td><td><span class="module-pill">${esc(asset.status)}</span></td><td>${esc(asset.assigned)}</td><td><button class="btn btn-sm" data-action="asset-action" data-id="${esc(asset.id)}">View</button></td></tr>`).join("")}</tbody></table></div></div>
+        </div>`;
+      }
+
+      function renderExpenses() {
+        if (!moduleEnabled("expenses")) return moduleDisabledPage("expenses");
+        return `<div class="page">${pageHead("expenses", `<button class="btn btn-primary" data-action="new-request" data-module="expenses">New Expense Claim</button>`)}
+          <div class="grid grid-4">${[["This month","USD 248"],["Awaiting approval","USD 0"],["Approved","USD 248"],["Paid","USD 1,182"]].map(x => `<div class="card stat"><div class="stat-icon">${icon("expenses")}</div><div class="stat-value">${x[1]}</div><div class="stat-label">${x[0]}</div></div>`).join("")}</div>
+          <div class="card table-card" style="margin-top:18px"><div class="table-toolbar"><h2 style="margin:0">Expense claims</h2></div>${requestTable(state.requests.filter(r => r.module === "expenses"))}</div>
+        </div>`;
+      }
+
+      function directoryCards(people) {
+        if (!people.length) return `<div class="card empty" style="grid-column:1/-1"><h2>No employees found</h2><p class="subtle">Try a different name, department, or location.</p></div>`;
+        return people.map(p => `<article class="card"><div style="display:flex;align-items:center;gap:12px"><div class="avatar">${initials(p.name)}</div><div><h3>${esc(p.name)}</h3><div class="subtle">${esc(p.role)}</div></div></div><div style="margin-top:16px" class="detail-grid"><div><div class="field-label">Department</div><div class="field-value">${esc(p.department)}</div></div><div><div class="field-label">Location</div><div class="field-value">${esc(p.location)}</div></div></div><button class="btn btn-sm" style="margin-top:16px" data-action="view-person" data-person="${esc(p.name)}">View profile</button></article>`).join("");
+      }
+
+      function renderDirectory() {
+        return `<div class="page">${pageHead("directory")}
+          <div class="data-toolbar">
+            <input class="input" id="directorySearch" type="search" placeholder="Search name, role, or department" aria-label="Search employee directory">
+            <select class="filter" id="directoryLocation" aria-label="Filter by location"><option value="">All locations</option>${[...new Set(DIRECTORY_PEOPLE.map(p => p.location))].map(value => `<option>${esc(value)}</option>`).join("")}</select>
+            <span class="subtle" id="directoryCount">${DIRECTORY_PEOPLE.length} people</span>
+          </div>
+          <div class="catalog-grid" id="directoryGrid">${directoryCards(DIRECTORY_PEOPLE)}</div>
+        </div>`;
+      }
+
+      function renderReports() {
+        const filter = state.reportFilter || { module:"", period:"30" };
+        const rows = state.requests.filter(r => !filter.module || r.module === filter.module);
+        const closed = rows.filter(r => ["APPROVED","CLOSED"].includes(r.status)).length;
+        const approvalRate = rows.length ? Math.round(closed / rows.length * 100) : 0;
+        return `<div class="page">${pageHead("reports", `<button class="btn" data-action="export" data-kind="analytics">Export report</button>`)}
+          <div class="data-toolbar">
+            <select class="filter" id="reportModule" aria-label="Report module"><option value="">All modules</option>${Object.entries(MODULES).map(([key,m]) => `<option value="${key}" ${filter.module === key ? "selected" : ""}>${esc(m.name)}</option>`).join("")}</select>
+            <select class="filter" id="reportPeriod" aria-label="Report period"><option value="7" ${filter.period === "7" ? "selected" : ""}>Last 7 days</option><option value="30" ${filter.period === "30" ? "selected" : ""}>Last 30 days</option><option value="90" ${filter.period === "90" ? "selected" : ""}>Last 90 days</option></select>
+            <span class="subtle">Charts update using the selected filters</span>
+          </div>
+          <div class="grid grid-4">${[["Total requests",rows.length],["Completion rate",`${approvalRate}%`],["Awaiting action",rows.filter(r => ["SUBMITTED","IN_REVIEW"].includes(r.status)).length],["Sent back",rows.filter(r => r.status === "SENT_BACK").length]].map(x => `<div class="card stat"><div class="stat-icon">${icon("reports")}</div><div class="stat-value">${x[1]}</div><div class="stat-label">${x[0]}</div></div>`).join("")}</div>
+          <div class="grid grid-2" style="margin-top:18px"><div class="card"><div class="card-head"><h2>Requests by module</h2></div><div class="chart">${["leave","helpdesk","timesheets","assets","expenses"].map(key => { const count=state.requests.filter(r => r.module === key).length; const height=Math.max(8, count * 22); return `<div class="bar-group"><span class="bar" style="height:${Math.min(95,height)}%"></span></div>`; }).join("")}</div><div class="chart-labels">${["Leave","IT","Time","Asset","Expense"].map(x => `<span>${x}</span>`).join("")}</div></div><div class="card"><div class="card-head"><h2>SLA performance</h2></div>${[["leave","Leave",96],["helpdesk","IT Helpdesk",88],["timesheets","Timesheets",94],["assets","Assets",91],["expenses","Expenses",89]].filter(x => !filter.module || x[0] === filter.module).map(x => `<div style="margin:15px 0"><div style="display:flex;justify-content:space-between"><span>${x[1]}</span><strong>${x[2]}%</strong></div><div style="height:7px;margin-top:7px;border-radius:999px;background:var(--fd-border)"><div style="height:100%;width:${x[2]}%;border-radius:999px;background:var(--fd-primary)"></div></div></div>`).join("")}</div></div>
+        </div>`;
+      }
+
+      function renderNotifications() {
+        return `<div class="page">${pageHead("notifications", `<button class="btn" data-action="mark-all-read">Mark all read</button>`)}
+          <div class="card" style="padding:0">${state.notifications.map(n => `<button style="width:100%;padding:16px 18px;display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:12px;border:0;border-top:1px solid var(--fd-border);text-align:left;background:${n.read ? "white" : "var(--fd-primary-soft)"}" data-action="open-notification" data-id="${n.id}" data-route="${n.route}"><span style="width:8px;height:8px;margin-top:6px;border-radius:50%;background:${n.read ? "var(--fd-border)" : "var(--fd-primary)"}"></span><span><strong>${esc(n.title)}</strong><span class="subtle" style="display:block;margin-top:3px">${esc(n.copy)}</span></span><span class="subtle">${esc(n.time)}</span></button>`).join("")}</div>
+        </div>`;
+      }
+
+      function auditTableRows(rows) {
+        return rows.length ? rows.map(a => `<tr><td>${esc(a.time)}</td><td><strong>${esc(a.actor)}</strong></td><td><span class="module-pill">${esc(a.action)}</span></td><td>${esc(a.target)}</td><td>${esc(a.detail)}</td></tr>`).join("") : `<tr><td colspan="5" class="empty-inline">No audit events match the current filters.</td></tr>`;
+      }
+
+      function updateAuditView() {
+        const search = document.getElementById("auditSearch")?.value.toLowerCase().trim() || "";
+        const action = document.getElementById("auditAction")?.value || "";
+        const rows = state.audit.filter(item => (!action || item.action === action) && (!search || `${item.actor} ${item.target} ${item.detail}`.toLowerCase().includes(search)));
+        const host = document.getElementById("auditRows");
+        if (host) host.innerHTML = auditTableRows(rows);
+      }
+
+      function renderAudit() {
+        return `<div class="page">${pageHead("audit", `<button class="btn" data-action="export" data-kind="audit">Export audit</button>`)}
+          <div class="data-toolbar"><input class="input" id="auditSearch" type="search" placeholder="Search actor, target, or detail" aria-label="Search audit trail"><select class="filter" id="auditAction"><option value="">All actions</option>${[...new Set(state.audit.map(item => item.action))].map(value => `<option>${esc(value)}</option>`).join("")}</select></div>
+          <div class="card table-card"><div class="table-scroll"><table><thead><tr><th>Time</th><th>Actor</th><th>Action</th><th>Target</th><th>Detail</th></tr></thead><tbody id="auditRows">${auditTableRows(state.audit)}</tbody></table></div></div>
+        </div>`;
+      }
+
+      function renderModules() {
+        return `<div class="page">${pageHead("modules")}
+          <div class="callout warning" style="margin-bottom:18px"><b>!</b><span>Disabling a module removes its navigation and service entry points. Historical and in-flight requests remain available in My Requests and Audit Trail.</span></div>
+          <div class="card"><div class="card-head"><div><h2>Installed modules</h2><div class="subtle">All module objects remain installed in the prototype</div></div><span class="module-pill">${Object.values(state.modules).filter(Boolean).length} of 5 enabled</span></div>
+            ${Object.entries(MODULES).map(([key, m]) => `<div class="module-row"><div class="service-icon">${icon(key)}</div><div class="module-meta"><strong>${esc(m.name)}</strong><div class="subtle">Page ${m.page} · ${state.requests.filter(r => r.module === key).length} historical/in-flight requests</div></div><span class="${moduleEnabled(key) ? "pill approved" : "pill cancelled"}">${moduleEnabled(key) ? "ENABLED" : "DISABLED"}</span><button class="switch ${moduleEnabled(key) ? "on" : ""}" data-action="toggle-module" data-module="${key}" aria-label="${moduleEnabled(key) ? "Disable" : "Enable"} ${user().code !== "SYS" ? "disabled" : ""}></button></div>`).join("")}
+          </div>
+        </div>`;
+      }
+
+      function renderAI() {
+        return `<div class="page">${pageHead("ai")}
+          <div class="callout" style="margin-bottom:18px"><b>✦</b><span>Answers are filtered to the current demo user's scope. The assistant cannot approve, reject, pay, or bypass module controls.</span></div>
+          <div class="card chat"><div class="messages" id="messages">${state.aiMessages.map(m => `<div class="message ${m.from === "user" ? "user" : ""}">${esc(m.text)}</div>`).join("")}</div><form class="chat-input" id="aiForm"><input name="prompt" placeholder="Ask about your requests, policies or services…" autocomplete="off" required><button class="btn btn-primary" type="submit">Send</button></form></div>
+        </div>`;
+      }
+
+      function renderKnowledge() {
+        return `<div class="page">${pageHead("knowledge")}
+          <div class="data-toolbar"><input class="input" id="knowledgeSearch" type="search" placeholder="Search policies and guides" aria-label="Search knowledge base"><select class="filter" id="knowledgeCategory"><option value="">All categories</option>${[...new Set(KNOWLEDGE_ARTICLES.map(a => a.category))].map(value => `<option>${esc(value)}</option>`).join("")}</select></div>
+          <div class="catalog-grid" id="knowledgeGrid">${knowledgeCards(KNOWLEDGE_ARTICLES)}</div>
+        </div>`;
+      }
+
+      function knowledgeCards(articles) {
+        if (!articles.length) return `<div class="card empty" style="grid-column:1/-1"><h2>No articles found</h2><p class="subtle">Try another search term or category.</p></div>`;
+        return articles.map((article,index) => `<article class="service-card"><div class="service-icon">${icon("knowledge")}</div><div class="service-title">${esc(article.title)}</div><div class="service-copy">${esc(article.summary)}</div><div class="service-foot"><span class="module-pill">${esc(article.category)}</span><button class="btn btn-sm" data-action="read-article" data-index="${KNOWLEDGE_ARTICLES.indexOf(article)}">Read</button></div></article>`).join("");
+      }
+
+      function renderDelegation() {
+        const active = state.delegations.filter(item => item.status !== "CANCELLED");
+        return `<div class="page">${pageHead("delegation", `<button class="btn btn-primary" data-action="new-delegation">New Delegation</button>`)}
+          <div class="grid split"><div class="card table-card"><div class="table-toolbar"><h2 style="margin:0">My delegations</h2><span class="subtle" style="margin-left:auto">${active.length} active or scheduled</span></div><div class="table-scroll"><table><thead><tr><th>Delegate</th><th>Period</th><th>Scope</th><th>Status</th><th></th></tr></thead><tbody>${state.delegations.length ? state.delegations.map(item => `<tr><td><strong>${esc(item.delegate)}</strong><small>${esc(item.reason || "")}</small></td><td>${esc(formatDate(item.start))} – ${esc(formatDate(item.end))}</td><td>${esc(item.scope)}</td><td>${pill(item.status)}</td><td>${item.status !== "CANCELLED" ? `<button class="btn btn-sm" data-action="cancel-delegation" data-id="${item.id}">Cancel</button>` : ""}</td></tr>`).join("") : `<tr><td colspan="5" class="empty-inline">No delegations configured.</td></tr>`}</tbody></table></div></div><div class="card"><h2>Out of office</h2><p class="subtle">When active, new Human Tasks are routed according to the approved delegation.</p><div class="callout ${state.outOfOffice ? "" : "warning"}" style="margin:16px 0"><b>${state.outOfOffice ? "✓" : "i"}</b><span>${state.outOfOffice ? "Out of office is active. Delegation rules will route new tasks." : "Out of office is currently off."}</span></div><button class="btn ${state.outOfOffice ? "btn-danger" : "btn-primary"}" data-action="toggle-ooo">${state.outOfOffice ? "Turn off" : "Set out of office"}</button></div></div>
+        </div>`;
+      }
+
+      function renderCalendar() {
+        const month = Number.isFinite(state.calendarMonth) ? state.calendarMonth : 6;
+        const first = new Date(2026, month, 1);
+        const daysInMonth = new Date(2026, month + 1, 0).getDate();
+        const offset = (first.getDay() + 6) % 7;
+        const previousDays = new Date(2026, month, 0).getDate();
+        const cells = Array.from({length:42}, (_,index) => {
+          if (index < offset) return { day:previousDays - offset + index + 1, muted:true, month:month - 1 };
+          if (index >= offset + daysInMonth) return { day:index - offset - daysInMonth + 1, muted:true, month:month + 1 };
+          return { day:index - offset + 1, muted:false, month };
+        });
+        const events = month === 6 ? { 15:"Company town hall", 27:"Team leave · 2" } : month === 7 ? { 15:"Independence Day", 21:"Payroll cutoff" } : {};
+        const monthLabel = new Date(2026, month, 1).toLocaleDateString("en-GB", { month:"long", year:"numeric" });
+        return `<div class="page">${pageHead("calendar", `<button class="btn" data-action="calendar-prev" aria-label="Previous month">←</button><button class="btn" data-action="calendar-today">Today</button><button class="btn" data-action="calendar-next" aria-label="Next month">→</button>`)}
+          <div class="card table-card"><div class="table-toolbar"><h2 style="margin:0">${esc(monthLabel)}</h2><span class="subtle" style="margin-left:auto">Select an event for details</span></div><div class="table-toolbar">${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d => `<strong style="flex:1;text-align:center;font-size:11px">${d}</strong>`).join("")}</div><div class="table-scroll"><div class="calendar">${cells.map(cell => `<div class="cal-cell ${cell.muted ? "muted" : ""}" ${!cell.muted && events[cell.day] ? `data-action="calendar-event" data-day="${cell.day}" data-title="${esc(events[cell.day])}"` : ""}><strong>${cell.day}</strong>${!cell.muted && events[cell.day] ? `<div class="cal-event">${esc(events[cell.day])}</div>` : ""}</div>`).join("")}</div></div></div>
+        </div>`;
+      }
+
+      function renderAdminPage(key) {
+        if (key === "admin") {
+          return `<div class="page">${pageHead("admin")}<div class="grid grid-4">${[["Active users",state.adminData.users.filter(row => row[3] === "Active").length],["Enabled modules",Object.values(state.modules).filter(Boolean).length],["Workflow rules",state.adminData.workflow.length],["Unread alerts",unreadCount()]].map(x => `<div class="card stat"><div class="stat-icon">${icon("admin")}</div><div class="stat-value">${x[1]}</div><div class="stat-label">${x[0]}</div></div>`).join("")}</div><div class="catalog-grid" style="margin-top:18px">${[["lookups","Lookup Management"],["roles","Role Management"],["users","User Management"],["modules","Module Manager"],["config","Configuration"],["audit","Audit Trail"]].map(x => `<button class="service-card" data-action="nav" data-route="${x[0]}" style="text-align:left"><div class="service-icon">${icon(x[0])}</div><div class="service-title">${x[1]}</div><div class="service-copy">Open ${x[1].toLowerCase()}.</div></button>`).join("")}</div></div>`;
+        }
+        const rows = state.adminData[key] || [];
+        return `<div class="page">${pageHead(key, `<button class="btn btn-primary" data-action="admin-add" data-kind="${key}">＋ Add</button>`)}
+          <div class="card table-card"><div class="table-scroll"><table><thead><tr><th>Name / Code</th><th>Type / Value</th><th>Scope / Route</th><th>Status</th><th>Action</th></tr></thead><tbody>${rows.length ? rows.map((row,index) => `<tr>${row.map((cell,i) => `<td>${i===0 ? `<strong>${esc(cell)}</strong>` : esc(cell)}</td>`).join("")}<td><button class="btn btn-sm" data-action="admin-edit" data-kind="${key}" data-index="${index}">Edit</button></td></tr>`).join("") : `<tr><td colspan="5" class="empty-inline">No records configured.</td></tr>`}</tbody></table></div></div>
+        </div>`;
+      }
+
+      function renderProfile() {
+        const u = user();
+        const prefs = state.preferences[state.user] || { email:true, compact:false };
+        return `<div class="page">${pageHead("profile", `<button class="btn" data-action="logout">Sign out</button><button class="btn btn-primary" data-action="save-profile">Save changes</button>`)}
+          <div class="grid split"><form class="card" id="profileForm"><div style="display:flex;align-items:center;gap:16px;margin-bottom:24px"><div class="avatar" style="width:64px;height:64px;font-size:18px">${initials(u.name)}</div><div><h2>${esc(u.name)}</h2><div class="subtle">${esc(u.role)} · ${esc(u.code)}</div></div></div><div class="form-grid"><div class="form-field"><label for="profileName">Display name<span class="required-mark">*</span></label><input class="input" id="profileName" name="name" value="${esc(u.name)}" required></div><div class="form-field"><label>Role</label><input class="input" value="${esc(u.role)}" disabled></div><div class="form-field"><label for="profileDepartment">Department</label><input class="input" id="profileDepartment" name="department" value="${esc(u.department || "Engineering")}"></div><div class="form-field"><label for="profileLocation">Location</label><select class="input" id="profileLocation" name="location">${["Delhi","Bengaluru","Mumbai"].map(value => `<option ${value === (u.location || "Delhi") ? "selected" : ""}>${value}</option>`).join("")}</select></div><div class="form-field full"><label for="profilePhone">Contact number</label><input class="input" id="profilePhone" name="phone" value="${esc(u.phone || "+91 98765 43210")}" inputmode="tel"></div></div></form><aside class="card"><h2>Preferences</h2><div class="module-row"><div class="module-meta"><strong>Email notifications</strong><div class="subtle">Workflow and SLA updates</div></div><button class="switch ${prefs.email ? "on" : ""}" data-action="profile-toggle" data-pref="email" aria-label="Toggle email notifications"></button></div><div class="module-row"><div class="module-meta"><strong>Compact tables</strong><div class="subtle">Show more rows on screen</div></div><button class="switch ${prefs.compact ? "on" : ""}" data-action="profile-toggle" data-pref="compact" aria-label="Toggle compact tables"></button></div><div class="callout" style="margin-top:18px"><b>i</b><span>Preferences and profile details are saved in this browser prototype.</span></div></aside></div>
+        </div>`;
+      }
+
+      function permissionDenied() {
+        return `<div class="page"><div class="card empty"><div class="empty-icon">!</div><h1>Permission denied</h1><p class="subtle">Your current demo role does not have access to this page.</p><button class="btn btn-primary" data-action="nav" data-route="dashboard">Return to Dashboard</button></div></div>`;
+      }
+
+      function renderRoute() {
+        if (!state.loggedIn) return renderLogin();
+        const current = route();
+        const navItem = NAV.flatMap(s => s.items).find(i => i.route === current);
+        if (navItem && !allowed(navItem)) return renderShell(permissionDenied());
+        const renderers = {
+          dashboard: renderDashboard, catalog: renderCatalog, requests: renderRequests, approvals: renderApprovals,
+          request: renderRequestDetail, leave: renderLeave, helpdesk: renderHelpdesk, timesheets: renderTimesheets,
+          assets: renderAssets, expenses: renderExpenses, directory: renderDirectory, reports: renderReports,
+          notifications: renderNotifications, audit: renderAudit, modules: renderModules, ai: renderAI,
+          knowledge: renderKnowledge, delegation: renderDelegation, calendar: renderCalendar, profile: renderProfile,
+          workflow: () => renderAdminPage("workflow"), admin: () => renderAdminPage("admin"),
+          lookups: () => renderAdminPage("lookups"), roles: () => renderAdminPage("roles"),
+          users: () => renderAdminPage("users"), config: () => renderAdminPage("config")
+        };
+        renderShell((renderers[current] || renderDashboard)());
+        requestAnimationFrame(() => {
+          const messages = document.getElementById("messages");
+          if (messages) messages.scrollTop = messages.scrollHeight;
+        });
+      }
+      function render() { renderRoute(); }
+
+      function openModal(content, small = false) {
+        currentModal = true;
+        document.getElementById("modalRoot").innerHTML = `<div class="modal-layer" data-action="modal-backdrop"><section class="modal ${small ? "sm" : ""}" role="dialog" aria-modal="true">${content}</section></div>`;
+        const first = document.querySelector("#modalRoot input, #modalRoot select, #modalRoot button");
+        if (first) setTimeout(() => first.focus(), 20);
+      }
+      function closeModal() {
+        currentModal = null;
+        document.getElementById("modalRoot").innerHTML = "";
+      }
+      function modalHeader(title, subtitle = "") {
+        return `<header class="modal-head"><div><h2>${esc(title)}</h2>${subtitle ? `<div class="subtle">${esc(subtitle)}</div>` : ""}</div><button class="icon-btn" data-action="close-modal" aria-label="Close dialog">×</button></header>`;
+      }
+
+      function requestModuleFields(moduleKey, values = {}, preset = "") {
+        const required = `<span class="required-mark">*</span>`;
+        if (moduleKey === "leave") {
+          const presetType = /comp/i.test(preset) ? "Comp-Off" : values.leaveType || "Annual leave";
+          return `
+            <div class="form-field"><label for="leaveType">Leave type${required}</label><select class="input" id="leaveType" name="leaveType" required>${["Annual leave","Sick leave","Casual leave","Comp-Off"].map(value => `<option ${value === presetType ? "selected" : ""}>${value}</option>`).join("")}</select></div>
+            <div class="form-field"><label for="dayOption">Day option${required}</label><select class="input" id="dayOption" name="dayOption" required>${["Full day","First half","Second half"].map(value => `<option ${value === values.dayOption ? "selected" : ""}>${value}</option>`).join("")}</select></div>
+            <div class="form-field"><label for="leaveStart">Start date${required}</label><input class="input" id="leaveStart" name="start" type="date" value="${esc(values.start || "2026-07-29")}" required></div>
+            <div class="form-field"><label for="leaveEnd">End date${required}</label><input class="input" id="leaveEnd" name="end" type="date" value="${esc(values.end || "2026-07-31")}" required></div>
+            <div class="form-field full"><label for="leaveHandover">Handover contact</label><input class="input" id="leaveHandover" name="handover" value="${esc(values.handover || "")}" placeholder="Colleague covering urgent work"></div>
+            <div class="form-field full"><label for="leaveReason">Reason${required}</label><textarea class="input" id="leaveReason" name="reason" required placeholder="Brief reason for leave">${esc(values.reason || "")}</textarea></div>`;
+        }
+        if (moduleKey === "helpdesk") {
+          const presetCategory = /licen/i.test(preset) ? "Software & access" : values.category || "Access & connectivity";
+          return `
+            <div class="form-field"><label for="itCategory">Category${required}</label><select class="input" id="itCategory" name="category" required>${["Access & connectivity","Hardware","Software & access","Email & collaboration","Security incident"].map(value => `<option ${value === presetCategory ? "selected" : ""}>${value}</option>`).join("")}</select></div>
+            <div class="form-field"><label for="itImpact">Business impact${required}</label><select class="input" id="itImpact" name="impact" required>${["Individual user","Small team","Department","Organization-wide"].map(value => `<option ${value === values.impact ? "selected" : ""}>${value}</option>`).join("")}</select></div>
+            <div class="form-field full"><label for="itSummary">Issue summary${required}</label><input class="input" id="itSummary" name="issueSummary" value="${esc(values.issueSummary || preset || "")}" maxlength="100" required placeholder="What is not working?"></div>
+            <div class="form-field"><label for="itUrgency">Urgency${required}</label><select class="input" id="itUrgency" name="urgency" required>${["Normal","High","Critical"].map(value => `<option ${value === (values.urgency || "Normal") ? "selected" : ""}>${value}</option>`).join("")}</select></div>
+            <div class="form-field"><label for="itDevice">Device / application</label><input class="input" id="itDevice" name="device" value="${esc(values.device || "")}" placeholder="e.g. FD-LAP-1042 or VPN"></div>
+            <div class="form-field full"><label for="itDescription">Issue description${required}</label><textarea class="input" id="itDescription" name="description" required placeholder="What happened, when it started, and any error shown">${esc(values.description || values.reason || "")}</textarea></div>`;
+        }
+        if (moduleKey === "timesheets") {
+          return `
+            <div class="receipt-note">For a normal weekly submission, use the Timesheets page. This form is for a corrected or late timesheet request.</div>
+            <div class="form-field"><label for="tsWeek">Week starting${required}</label><input class="input" id="tsWeek" name="weekStart" type="date" value="${esc(values.weekStart || "2026-07-20")}" required></div>
+            <div class="form-field"><label for="tsProject">Primary project${required}</label><select class="input" id="tsProject" name="project" required>${["FlowDesk PRO","APEX Upgrade","Internal Enablement"].map(value => `<option ${value === values.project ? "selected" : ""}>${value}</option>`).join("")}</select></div>
+            <div class="form-field"><label for="tsHours">Total hours${required}</label><input class="input" id="tsHours" name="total" type="number" min="0.5" max="80" step=".5" value="${esc(values.total || "40")}" required></div>
+            <div class="form-field"><label for="tsCorrection">Request type${required}</label><select class="input" id="tsCorrection" name="correctionType" required>${["Late submission","Correction","Project reallocation"].map(value => `<option ${value === values.correctionType ? "selected" : ""}>${value}</option>`).join("")}</select></div>
+            <div class="form-field full"><label for="tsNotes">Explanation${required}</label><textarea class="input" id="tsNotes" name="reason" required placeholder="Explain why a correction or late submission is required">${esc(values.reason || "")}</textarea></div>`;
+        }
+        if (moduleKey === "assets") {
+          return `
+            <div class="form-field"><label for="assetType">Asset type${required}</label><select class="input" id="assetType" name="assetType" required>${["Laptop","Monitor","Phone","Keyboard & mouse","Headset","Other"].map(value => `<option ${value === (values.assetType || (/monitor/i.test(preset) ? "Monitor" : "Laptop")) ? "selected" : ""}>${value}</option>`).join("")}</select></div>
+            <div class="form-field"><label for="assetQuantity">Quantity${required}</label><input class="input" id="assetQuantity" name="quantity" type="number" min="1" max="10" value="${esc(values.quantity || "1")}" required></div>
+            <div class="form-field"><label for="assetRequired">Required by${required}</label><input class="input" id="assetRequired" name="requiredDate" type="date" value="${esc(values.requiredDate || "2026-08-03")}" required></div>
+            <div class="form-field"><label for="assetLocation">Delivery location${required}</label><select class="input" id="assetLocation" name="location" required>${["Delhi office","Bengaluru office","Mumbai office","Remote delivery"].map(value => `<option ${value === values.location ? "selected" : ""}>${value}</option>`).join("")}</select></div>
+            <div class="form-field full"><label for="assetPurpose">Business purpose${required}</label><textarea class="input" id="assetPurpose" name="reason" required placeholder="Explain the work requirement and any specification needed">${esc(values.reason || "")}</textarea></div>`;
+        }
+        return `
+          <div class="form-field"><label for="claimType">Claim type${required}</label><select class="input" id="claimType" name="claimType" required>${["Reimbursement","Cash advance"].map(value => `<option ${value === (values.claimType || (/advance/i.test(preset) ? "Cash advance" : "Reimbursement")) ? "selected" : ""}>${value}</option>`).join("")}</select></div>
+          <div class="form-field"><label for="expenseCategory">Category${required}</label><select class="input" id="expenseCategory" name="category" required>${["Business travel","Meals","Accommodation","Local transport","Office supplies","Client meeting"].map(value => `<option ${value === values.category ? "selected" : ""}>${value}</option>`).join("")}</select></div>
+          <div class="form-field"><label for="expenseDate">Expense date${required}</label><input class="input" id="expenseDate" name="expenseDate" type="date" value="${esc(values.expenseDate || "2026-07-26")}" required></div>
+          <div class="form-field"><label for="expenseMerchant">Merchant / payee${required}</label><input class="input" id="expenseMerchant" name="merchant" value="${esc(values.merchant || "")}" required placeholder="Vendor name"></div>
+          <div class="form-field"><label for="expenseCurrency">Currency${required}</label><select class="input" id="expenseCurrency" name="currency" required>${["USD","INR","EUR","GBP"].map(value => `<option ${value === (values.currency || "USD") ? "selected" : ""}>${value}</option>`).join("")}</select></div>
+          <div class="form-field"><label for="expenseAmount">Amount${required}</label><input class="input" id="expenseAmount" name="amount" type="number" min=".01" step=".01" value="${esc(values.amount || "")}" required placeholder="0.00"></div>
+          <div class="form-field full"><label for="expenseReceipt">Receipt reference</label><input class="input" id="expenseReceipt" name="receipt" value="${esc(values.receipt || "")}" placeholder="Receipt number or filename"></div>
+          <div class="form-field full"><label for="expensePurpose">Business purpose${required}</label><textarea class="input" id="expensePurpose" name="reason" required placeholder="Who, what, and why this expense was incurred">${esc(values.reason || "")}</textarea></div>
+          <div class="receipt-note">A receipt reference is required for reimbursement claims above USD 25 (or local-currency equivalent).</div>`;
+      }
+
+      function newRequestModal(options = {}) {
+        const existing = options.requestId ? state.requests.find(request => request.id === options.requestId) : null;
+        const preService = Number.isFinite(options.service) ? SERVICES[options.service] : null;
+        const moduleKey = existing?.module || options.module || preService?.module || "leave";
+        if (!moduleEnabled(moduleKey)) return toast(`${moduleName(moduleKey)} is disabled.`, "error");
+        const enabledModules = Object.entries(MODULES).filter(([key]) => moduleEnabled(key));
+        const values = Object.assign({}, existing?.details || {}, { reason:existing?.reason || existing?.details?.reason || "" });
+        openModal(`
+          ${modalHeader(existing ? "Edit Request" : "New Request", existing ? `${existing.id} · Update the required information` : "Page 3 · Module-specific request details")}
+          <form id="requestForm" data-request-id="${esc(existing?.id || "")}">
+            <div class="modal-body">
+              <div class="callout" style="margin-bottom:18px"><b>1</b><span>Only fields required for the selected module are shown. Required fields are marked with an asterisk.</span></div>
+              <div class="form-grid">
+                <div class="form-field full"><label for="newModule">Request module${`<span class="required-mark">*</span>`}</label><select class="input" id="newModule" name="module" ${existing ? "disabled" : ""}>${enabledModules.map(([key,m]) => `<option value="${key}" ${key === moduleKey ? "selected" : ""}>${esc(m.name)}</option>`).join("")}</select>${existing ? `<input type="hidden" name="module" value="${esc(moduleKey)}">` : ""}</div>
+                ${requestModuleFields(moduleKey, values, options.preset || preService?.title || existing?.title || "")}
+              </div>
+            </div>
+            <footer class="modal-foot"><button class="btn" type="button" data-action="close-modal">Cancel</button><button class="btn" type="button" data-action="save-draft">Save Draft</button><button class="btn btn-primary" type="submit">${existing?.status === "SENT_BACK" ? "Update & Resubmit" : "Submit Request"}</button></footer>
+          </form>`);
+      }
+
+      function confirmRequestAction(id, action) {
+        const req = state.requests.find(r => r.id === id);
+        if (!req) return;
+        const titles = { approve:"Approve request", reject:"Reject request", send_back:"Send request back", submit:"Submit request", cancel:"Cancel request", fulfil:"Start fulfilment", close:"Close request" };
+        const needsComment = ["reject","send_back","cancel"].includes(action);
+        openModal(`
+          ${modalHeader(titles[action], req.id)}
+          <div class="modal-body"><p>You are about to <strong>${action.replace("_"," ")}</strong> “${esc(req.title)}”.</p><div class="form-field"><label for="actionComment">Comment${needsComment ? `<span class="required-mark">*</span>` : ""}</label><textarea class="input" id="actionComment" ${needsComment ? "required" : ""} placeholder="${needsComment ? "A reason is required" : "Add an optional decision note"}"></textarea></div></div>
+          <footer class="modal-foot"><button class="btn" data-action="close-modal">Cancel</button><button class="btn ${action === "reject" ? "btn-danger" : "btn-primary"}" data-action="confirm-request-action" data-id="${esc(id)}" data-request-action="${action}">Confirm</button></footer>`, true);
+      }
+
+      function profileMenu() {
+        openModal(`
+          ${modalHeader(user().name, user().role)}
+          <div class="modal-body">
+            <div class="form-field"><label>Quick demo user</label><select class="input" data-action="switch-user">${Object.entries(USERS).map(([key, value]) => `<option value="${key}" ${state.user === key ? "selected" : ""}>${esc(value.name)} — ${esc(value.code)}</option>`).join("")}</select></div>
+            <div class="grid grid-2" style="margin-top:16px"><button class="btn" data-action="nav" data-route="profile">My Profile</button><button class="btn" data-action="reset-demo">Reset Demo Data</button></div>
+          </div><footer class="modal-foot"><button class="btn" data-action="close-modal">Close</button><button class="btn btn-danger" data-action="logout">Sign out</button></footer>`, true);
+      }
+
+      function simpleModal(title, copy) {
+        openModal(`${modalHeader(title)}<div class="modal-body"><p>${esc(copy)}</p></div><footer class="modal-foot"><button class="btn btn-primary" data-action="close-modal">Done</button></footer>`, true);
+      }
+
+      function searchModal(query = "") {
+        const normalized = query.trim().toLowerCase();
+        const results = [];
+        if (normalized.length >= 2) {
+          state.requests.filter(r => `${r.id} ${r.title} ${r.requester}`.toLowerCase().includes(normalized)).slice(0,5).forEach(r => results.push({ icon:r.module, title:r.title, meta:`${r.id} · ${statusLabel(r.status)}`, action:"open-request", id:r.id }));
+          SERVICES.filter(s => moduleEnabled(s.module) && `${s.title} ${s.copy}`.toLowerCase().includes(normalized)).slice(0,4).forEach(s => results.push({ icon:s.module, title:s.title, meta:`Service · ${moduleName(s.module)}`, action:"new-request", module:s.module }));
+          DIRECTORY_PEOPLE.filter(p => `${p.name} ${p.role} ${p.department}`.toLowerCase().includes(normalized)).slice(0,4).forEach(p => results.push({ icon:"directory", title:p.name, meta:`${p.role} · ${p.department}`, action:"view-person", person:p.name }));
+        }
+        openModal(`${modalHeader("Search FlowDesk PRO", "Requests, people, and enabled services")}
+          <form class="modal-body" id="globalSearchForm">
+            <div class="form-field"><label for="modalSearch">Search</label><input class="input" id="modalSearch" name="query" type="search" value="${esc(query)}" placeholder="Enter at least two characters" autocomplete="off"></div>
+            <div class="search-results" style="margin-top:16px">${normalized.length < 2 ? `<div class="empty-inline">Type at least two characters.</div>` : results.length ? results.map(result => `<button type="button" class="search-result" data-action="${result.action}" ${result.id ? `data-id="${esc(result.id)}"` : ""} ${result.module ? `data-module="${esc(result.module)}"` : ""} ${result.person ? `data-person="${esc(result.person)}"` : ""}><span class="service-icon">${icon(result.icon,18)}</span><span><strong>${esc(result.title)}</strong><small style="display:block;color:var(--fd-muted)">${esc(result.meta)}</small></span><span>→</span></button>`).join("") : `<div class="empty-inline">No matching requests, people, or services.</div>`}</div>
+          </form><footer class="modal-foot"><button class="btn" data-action="close-modal">Close</button><button class="btn btn-primary" type="submit" form="globalSearchForm">Search</button></footer>`);
+      }
+
+      function commentModal(id) {
+        const req = state.requests.find(r => r.id === id);
+        if (!req) return;
+        openModal(`${modalHeader("Add comment", req.id)}<form id="commentForm" data-id="${esc(id)}"><div class="modal-body"><div class="form-field"><label for="commentText">Comment<span class="required-mark">*</span></label><textarea class="input" id="commentText" name="comment" required maxlength="500" placeholder="Add useful context or an update"></textarea><div class="form-hint">Visible in this request's activity history.</div></div></div><footer class="modal-foot"><button class="btn" type="button" data-action="close-modal">Cancel</button><button class="btn btn-primary" type="submit">Add comment</button></footer></form>`, true);
+      }
+
+      function attachmentModal(id) {
+        const req = state.requests.find(r => r.id === id);
+        if (!req) return;
+        openModal(`${modalHeader("Add attachment", req.id)}<form id="attachmentForm" data-id="${esc(id)}"><div class="modal-body"><div class="form-field"><label for="attachmentName">File name<span class="required-mark">*</span></label><input class="input" id="attachmentName" name="name" required placeholder="e.g. receipt-july.pdf"><div class="form-hint">The standalone prototype records the filename without uploading data.</div></div></div><footer class="modal-foot"><button class="btn" type="button" data-action="close-modal">Cancel</button><button class="btn btn-primary" type="submit">Attach</button></footer></form>`, true);
+      }
+
+      function assetDetailsModal(id) {
+        const asset = state.assets.find(item => item.id === id);
+        if (!asset) return toast("Asset record was not found.", "error");
+        openModal(`${modalHeader(asset.name, asset.id)}<div class="modal-body"><div class="detail-grid">${[["Type",asset.type],["Status",asset.status],["Assigned",asset.assigned],["Serial number",asset.serial],["Warranty until",asset.warranty],["Assigned to",user().name]].map(([label,value]) => `<div><div class="field-label">${esc(label)}</div><div class="field-value">${esc(value)}</div></div>`).join("")}</div></div><footer class="modal-foot"><button class="btn" data-action="close-modal">Close</button><button class="btn" data-action="asset-issue" data-id="${esc(id)}">Report issue</button>${asset.status === "Assigned" ? `<button class="btn btn-primary" data-action="asset-return" data-id="${esc(id)}">Request return</button>` : ""}</footer>`);
+      }
+
+      function personModal(name) {
+        const person = DIRECTORY_PEOPLE.find(item => item.name === name);
+        if (!person) return toast("Employee profile was not found.", "error");
+        openModal(`${modalHeader(person.name, `${person.role} · ${person.code}`)}<div class="modal-body"><div style="display:flex;align-items:center;gap:14px;margin-bottom:20px"><div class="avatar" style="width:54px;height:54px">${initials(person.name)}</div><div><strong>${esc(person.department)}</strong><div class="subtle">${esc(person.location)}</div></div></div><div class="detail-grid"><div><div class="field-label">Email</div><div class="field-value">${esc(person.email)}</div></div><div><div class="field-label">Manager</div><div class="field-value">${esc(person.manager)}</div></div></div></div><footer class="modal-foot"><button class="btn" data-action="close-modal">Close</button><button class="btn btn-primary" data-action="contact-person" data-person="${esc(person.name)}">Copy email address</button></footer>`, true);
+      }
+
+      function articleModal(index) {
+        const article = KNOWLEDGE_ARTICLES[Number(index)];
+        if (!article) return toast("Article was not found.", "error");
+        openModal(`${modalHeader(article.title, article.category)}<div class="modal-body"><p class="article-body">${esc(article.body)}</p><div class="callout" style="margin-top:18px"><b>i</b><span>Policy summaries support the prototype workflow; confirm final policy in the production knowledge base.</span></div></div><footer class="modal-foot"><button class="btn" data-action="close-modal">Close</button>${article.module && moduleEnabled(article.module) ? `<button class="btn btn-primary" data-action="new-request" data-module="${article.module}">Start related request</button>` : ""}</footer>`);
+      }
+
+      function delegationModal() {
+        const delegates = DIRECTORY_PEOPLE.filter(person => person.name !== user().name);
+        openModal(`${modalHeader("New Delegation", "Temporary approval coverage")}<form id="delegationForm"><div class="modal-body"><div class="form-grid"><div class="form-field"><label for="delegateName">Delegate<span class="required-mark">*</span></label><select class="input" id="delegateName" name="delegate" required>${delegates.map(person => `<option>${esc(person.name)}</option>`).join("")}</select></div><div class="form-field"><label for="delegateScope">Scope<span class="required-mark">*</span></label><select class="input" id="delegateScope" name="scope" required>${["Leave approvals","Expense approvals","IT approvals","Asset approvals","All my approvals"].map(value => `<option>${value}</option>`).join("")}</select></div><div class="form-field"><label for="delegateStart">Start date<span class="required-mark">*</span></label><input class="input" id="delegateStart" name="start" type="date" value="2026-08-01" required></div><div class="form-field"><label for="delegateEnd">End date<span class="required-mark">*</span></label><input class="input" id="delegateEnd" name="end" type="date" value="2026-08-05" required></div><div class="form-field full"><label for="delegateReason">Reason<span class="required-mark">*</span></label><textarea class="input" id="delegateReason" name="reason" required placeholder="Why is temporary coverage needed?"></textarea></div></div></div><footer class="modal-foot"><button class="btn" type="button" data-action="close-modal">Cancel</button><button class="btn btn-primary" type="submit">Create delegation</button></footer></form>`);
+      }
+
+      function timesheetSubmitModal() {
+        const totals = timesheetTotals();
+        if (!totals.total) return toast("Enter at least one timesheet hour before submitting.", "error");
+        if (totals.total > 80) return toast("Weekly hours cannot exceed 80.", "error");
+        openModal(`${modalHeader("Submit timesheet", state.timesheet.week)}<div class="modal-body"><div class="detail-grid"><div><div class="field-label">Total hours</div><div class="field-value">${totals.total.toFixed(1)} hours</div></div><div><div class="field-label">Missing from 40h</div><div class="field-value">${totals.missing.toFixed(1)} hours</div></div></div>${totals.missing ? `<div class="callout warning" style="margin-top:16px"><b>!</b><span>This week is below 40 hours. You can still submit it for manager review.</span></div>` : ""}</div><footer class="modal-foot"><button class="btn" data-action="close-modal">Cancel</button><button class="btn btn-primary" data-action="confirm-timesheet-submit">Submit to manager</button></footer>`, true);
+      }
+
+      function submitTimesheet() {
+        const totals = timesheetTotals();
+        state.timesheet.status = "SUBMITTED";
+        state.timesheet.savedAt = "Just now";
+        const existing = state.requests.find(request => request.module === "timesheets" && request.requester === user().name && request.details?.week === state.timesheet.week);
+        const req = existing || {
+          id:nextRequestId("timesheets"),
+          module:"timesheets",
+          requester:user().name,
+          date:todayLabel(),
+          owner:USERS.manager.name,
+          amount:"",
+          priority:"Normal",
+          history:[]
+        };
+        req.title = `Timesheet — ${state.timesheet.week}`;
+        req.status = "SUBMITTED";
+        req.reason = totals.missing ? `Submitted with ${totals.missing.toFixed(1)} missing hour(s).` : "Standard weekly timesheet submission.";
+        req.details = { week:state.timesheet.week, total:totals.total.toFixed(1), billable:totals.billable.toFixed(1) };
+        req.history.unshift({ action:"Timesheet submitted", time:"Just now", actor:user().name });
+        if (!existing) state.requests.unshift(req);
+        addAudit("SUBMIT", req.id, `${req.title} submitted with ${totals.total.toFixed(1)} hours`);
+        state.notifications.unshift({ id:Date.now(), title:"Timesheet submitted", copy:`${req.title} was routed to ${req.owner}.`, time:"Just now", read:false, route:"request" });
+        saveState();
+        closeModal();
+        render();
+        toast("Timesheet submitted to your manager.", "success");
+      }
+
+      function adminEditor(kind, index = -1) {
+        const labels = {
+          workflow:["Rule name","Module","Approval route"],
+          lookups:["Lookup code","Values / count","Scope"],
+          roles:["Role code","Role name","Access scope"],
+          users:["User name","Role","Role code"],
+          config:["Parameter","Value","Scope"]
+        };
+        const row = index >= 0 ? state.adminData[kind]?.[index] : null;
+        const fields = labels[kind] || ["Name","Value","Scope"];
+        openModal(`${modalHeader(`${row ? "Edit" : "Add"} ${PAGE_META[kind]?.[0] || "record"}`, "Changes are saved in this prototype")}<form id="adminForm" data-kind="${esc(kind)}" data-index="${index}"><div class="modal-body"><div class="form-grid">${fields.map((label,fieldIndex) => `<div class="form-field ${fieldIndex === 0 ? "full" : ""}"><label for="adminField${fieldIndex}">${esc(label)}<span class="required-mark">*</span></label><input class="input" id="adminField${fieldIndex}" name="field${fieldIndex}" value="${esc(row?.[fieldIndex] || "")}" required></div>`).join("")}<div class="form-field"><label for="adminStatus">Status<span class="required-mark">*</span></label><select class="input" id="adminStatus" name="status"><option ${row?.[3] !== "Inactive" ? "selected" : ""}>Active</option><option ${row?.[3] === "Inactive" ? "selected" : ""}>Inactive</option></select></div></div></div><footer class="modal-foot"><button class="btn" type="button" data-action="close-modal">Cancel</button><button class="btn btn-primary" type="submit">Save record</button></footer></form>`);
+      }
+
+      function dashboardRangeModal() {
+        openModal(`${modalHeader("Dashboard period", "Choose the reporting window")}<div class="modal-body"><div class="grid">${["Last 7 days","Last 30 days","Last 90 days"].map(value => `<button class="btn ${state.dashboardRange === value ? "btn-primary" : ""}" data-action="set-dashboard-range" data-value="${value}">${value}</button>`).join("")}</div></div><footer class="modal-foot"><button class="btn" data-action="close-modal">Cancel</button></footer>`, true);
+      }
+
+      function validateRequestForm(form, isDraft) {
+        if (isDraft) return true;
+        if (!form.reportValidity()) return false;
+        const data = new FormData(form);
+        const moduleKey = String(data.get("module"));
+        if (moduleKey === "leave" && String(data.get("end")) < String(data.get("start"))) {
+          toast("End date cannot be before the start date.", "error");
+          form.elements.end?.focus();
+          return false;
+        }
+        if (moduleKey === "expenses") {
+          const amount = Number(data.get("amount"));
+          const claimType = String(data.get("claimType"));
+          if (claimType === "Reimbursement" && amount > 25 && !String(data.get("receipt") || "").trim()) {
+            toast("Add a receipt reference for reimbursement claims above 25.", "error");
+            form.elements.receipt?.focus();
+            return false;
+          }
+        }
+        return true;
+      }
+
+      function requestTitle(moduleKey, data) {
+        if (moduleKey === "leave") {
+          const start = new Date(`${data.start}T12:00:00`);
+          const end = new Date(`${data.end}T12:00:00`);
+          const days = Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) ? 1 : Math.max(1, Math.round((end - start) / 86400000) + 1);
+          return `${data.leaveType || "Leave"} — ${days} ${days === 1 ? "day" : "days"}`;
+        }
+        if (moduleKey === "helpdesk") return data.issueSummary || "IT support request";
+        if (moduleKey === "timesheets") return `Timesheet ${data.correctionType || "correction"} — ${formatDate(data.weekStart)}`;
+        if (moduleKey === "assets") return `${data.assetType || "Asset"} request`;
+        return `${data.claimType || "Expense"}: ${data.category || "Business expense"} — ${data.currency || "USD"} ${Number(data.amount || 0).toFixed(2)}`;
+      }
+
+      function submitNewRequest(form, isDraft = false) {
+        if (!validateRequestForm(form, isDraft)) return;
+        const data = new FormData(form);
+        const moduleKey = String(data.get("module"));
+        if (!moduleEnabled(moduleKey)) return toast(`${moduleName(moduleKey)} is disabled.`, "error");
+        const values = Object.fromEntries(data.entries());
+        const existingId = form.dataset.requestId;
+        const existing = existingId ? state.requests.find(request => request.id === existingId) : null;
+        const id = existing?.id || nextRequestId(moduleKey);
+        const owner = moduleKey === "helpdesk" ? USERS.itagent.name : moduleKey === "expenses" ? USERS.finance.name : moduleKey === "assets" ? USERS.assetadmin.name : USERS.manager.name;
+        const req = existing || { id, module:moduleKey, requester:user().name, history:[] };
+        req.title = requestTitle(moduleKey, values);
+        req.date = req.date || todayLabel();
+        req.owner = owner;
+        req.status = isDraft ? "DRAFT" : "SUBMITTED";
+        req.amount = moduleKey === "expenses" ? `${values.currency || "USD"} ${Number(values.amount || 0).toFixed(2)}` : "";
+        req.priority = moduleKey === "helpdesk" ? (values.urgency === "Critical" ? "Urgent" : values.urgency || "Normal") : "Normal";
+        req.reason = String(values.reason || values.description || "");
+        req.details = values;
+        req.history = req.history || [];
+        req.history.unshift({ action:isDraft ? "Draft saved" : existing ? "Request resubmitted" : "Request submitted", time:"Just now", actor:user().name });
+        if (!existing) state.requests.unshift(req);
+        state.selectedRequest = id;
+        if (!isDraft) state.notifications.unshift({ id: Date.now(), title:"Request submitted", copy:`${req.title} was routed to ${req.owner}.`, time:"Just now", read:false, route:"request" });
+        addAudit(isDraft ? "SAVE DRAFT" : existing ? "RESUBMIT" : "SUBMIT", id, `${req.title} ${isDraft ? "saved as draft" : "submitted and routed"}`);
+        saveState();
+        closeModal();
+        navigate("request");
+        toast(isDraft ? "Draft saved successfully." : "Request submitted successfully.", "success");
+      }
+
+      function performRequestAction(id, action) {
+        const req = state.requests.find(r => r.id === id);
+        if (!req) return;
+        const requesterAction = ["submit","cancel"].includes(action);
+        const approvalAction = ["approve","reject","send_back"].includes(action);
+        const fulfilmentAction = ["fulfil","close"].includes(action);
+        if (requesterAction && req.requester !== user().name) {
+          closeModal();
+          return toast("Only the requester can submit or cancel this request.", "error");
+        }
+        if (approvalAction && !(["MGR","HOD","HR","FIN","IT","AST","SYS"].includes(user().code) && requestInRoleScope(req))) {
+          closeModal();
+          return toast("Your current role cannot take this approval action.", "error");
+        }
+        if (fulfilmentAction && !["FIN","IT","AST","SYS"].includes(user().code)) {
+          closeModal();
+          return toast("Your current role cannot complete fulfilment.", "error");
+        }
+        const allowedTransitions = {
+          DRAFT:{ submit:"SUBMITTED", cancel:"CANCELLED" },
+          SUBMITTED:{ approve:"APPROVED", reject:"REJECTED", send_back:"SENT_BACK", cancel:"CANCELLED" },
+          IN_REVIEW:{ approve:"APPROVED", reject:"REJECTED", send_back:"SENT_BACK", cancel:"CANCELLED" },
+          SENT_BACK:{ submit:"SUBMITTED", cancel:"CANCELLED" },
+          APPROVED:{ fulfil:"FULFILMENT", close:"CLOSED" },
+          FULFILMENT:{ close:"CLOSED", reject:"REJECTED" }
+        };
+        const status = allowedTransitions[req.status]?.[action];
+        if (!status) {
+          closeModal();
+          return toast(`This action is not available while the request is ${statusLabel(req.status).toLowerCase()}.`, "error");
+        }
+        const comment = document.getElementById("actionComment")?.value.trim() || "";
+        if (["reject","send_back","cancel"].includes(action) && !comment) {
+          document.getElementById("actionComment")?.focus();
+          return toast("Add a reason before confirming this action.", "error");
+        }
+        req.status = status;
+        req.history = req.history || [];
+        req.history.unshift({ action:statusLabel(status), time:"Just now", actor:user().name });
+        if (comment) {
+          state.comments[id] = state.comments[id] || [];
+          state.comments[id].unshift({ author:user().name, time:"Just now", text:comment });
+        }
+        addAudit(action.toUpperCase().replace("_"," "), id, `${req.title} changed to ${statusLabel(status)}`);
+        state.notifications.unshift({ id:Date.now(), title:`Request ${statusLabel(status).toLowerCase()}`, copy:`${req.id} was updated by ${user().name}.`, time:"Just now", read:false, route:"request" });
+        saveState();
+        closeModal();
+        render();
+        toast(`Request ${statusLabel(status).toLowerCase()}.`, action === "reject" ? "error" : "success");
+      }
+
+      function toggleModule(key) {
+        const m = MODULES[key];
+        const enabling = !moduleEnabled(key);
+        openModal(`
+          ${modalHeader(`${enabling ? "Enable" : "Disable"} ${m.name}`, "Module Manager impact preview")}
+          <div class="modal-body">
+            <div class="callout ${enabling ? "" : "warning"}"><b>${enabling ? "i" : "!"}</b><span>${enabling ? "Navigation and new request entry points will be restored." : "Navigation and new request entry points will be removed. Historical and in-flight requests will remain visible."}</span></div>
+            <div class="detail-grid" style="margin-top:18px"><div><div class="field-label">Affected services</div><div class="field-value">${SERVICES.filter(s => s.module === key).length}</div></div><div><div class="field-label">Existing requests</div><div class="field-value">${state.requests.filter(r => r.module === key).length}</div></div></div>
+          </div><footer class="modal-foot"><button class="btn" data-action="close-modal">Cancel</button><button class="btn ${enabling ? "btn-primary" : "btn-danger"}" data-action="confirm-module-toggle" data-module="${key}">${enabling ? "Enable" : "Disable"} module</button></footer>`, true);
+      }
+
+      function downloadExport(kind) {
+        const csv = value => `"${String(value ?? "").replaceAll('"','""')}"`;
+        const reportRows = kind === "analytics" && state.reportFilter?.module ? state.requests.filter(r => r.module === state.reportFilter.module) : state.requests;
+        const content = kind === "audit"
+          ? [["Time","Actor","Action","Target","Detail"], ...state.audit.map(a => [a.time,a.actor,a.action,a.target,a.detail])].map(row => row.map(csv).join(",")).join("\n")
+          : [["Request ID","Title","Module","Requester","Status","Owner","Amount"], ...reportRows.map(r => [r.id,r.title,moduleName(r.module),r.requester,statusLabel(r.status),r.owner,r.amount])].map(row => row.map(csv).join(",")).join("\n");
+        const blob = new Blob([content], { type:"text/csv" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `FlowDesk_PRO_${kind}_${new Date().toISOString().slice(0,10)}.csv`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+        toast("Export downloaded.", "success");
+      }
+
+      document.addEventListener("click", event => {
+        const target = event.target.closest("[data-action]");
+        if (!target) return;
+        const action = target.dataset.action;
+        if (action === "modal-backdrop" && event.target === target) return closeModal();
+        if (action === "close-modal") return closeModal();
+        if (action === "toggle-sidebar") { sidebarOpen = !sidebarOpen; return render(); }
+        if (action === "close-sidebar") { sidebarOpen = false; return render(); }
+        if (action === "nav") return navigate(target.dataset.route);
+        if (action === "profile-menu") return profileMenu();
+        if (action === "search-mobile") return searchModal();
+        if (action === "dashboard-range") return dashboardRangeModal();
+        if (action === "set-dashboard-range") {
+          state.dashboardRange = target.dataset.value;
+          saveState();
+          closeModal();
+          render();
+          return toast(`Dashboard updated to ${state.dashboardRange.toLowerCase()}.`, "success");
+        }
+        if (action === "new-request") {
+          const service = target.dataset.service === undefined ? undefined : Number(target.dataset.service);
+          return newRequestModal({ service, module: target.dataset.module });
+        }
+        if (action === "edit-request") return newRequestModal({ requestId:target.dataset.id });
+        if (action === "open-request") {
+          event.stopPropagation();
+          state.selectedRequest = target.dataset.id;
+          saveState();
+          return navigate("request");
+        }
+        if (action === "request-action") return confirmRequestAction(target.dataset.id, target.dataset.requestAction);
+        if (action === "confirm-request-action") return performRequestAction(target.dataset.id, target.dataset.requestAction);
+        if (action === "inbox-view") { state.inboxView = target.dataset.view; saveState(); return render(); }
+        if (action === "request-tab") { state.requestTab = target.dataset.tab; saveState(); return render(); }
+        if (action === "clear-request-filters") { state.requestFilters = { module:"", status:"" }; saveState(); return render(); }
+        if (action === "mark-all-read") { state.notifications.forEach(n => n.read = true); saveState(); render(); return toast("All notifications marked as read.", "success"); }
+        if (action === "open-notification") {
+          const n = state.notifications.find(x => String(x.id) === target.dataset.id);
+          if (n) n.read = true;
+          saveState();
+          return navigate(target.dataset.route);
+        }
+        if (action === "toggle-module") return toggleModule(target.dataset.module);
+        if (action === "confirm-module-toggle") {
+          const key = target.dataset.module;
+          state.modules[key] = !moduleEnabled(key);
+          addAudit(state.modules[key] ? "MODULE ENABLE" : "MODULE DISABLE", moduleName(key), "Module availability changed");
+          saveState();
+          closeModal();
+          render();
+          return toast(`${moduleName(key)} ${state.modules[key] ? "enabled" : "disabled"}.`, "success");
+        }
+        if (action === "reset-demo") {
+          state = clone(DEFAULT_STATE);
+          saveState();
+          closeModal();
+          navigate("dashboard");
+          return toast("Demo data reset.", "success");
+        }
+        if (action === "logout") { state.loggedIn = false; saveState(); closeModal(); return renderLogin(); }
+        if (action === "export") return downloadExport(target.dataset.kind || "requests");
+        if (action === "save-draft") {
+          const form = target.closest("form");
+          return form ? submitNewRequest(form, true) : toast("No request form is open.", "error");
+        }
+        if (action === "save-timesheet") {
+          state.timesheet.status = "DRAFT";
+          state.timesheet.savedAt = new Date().toLocaleTimeString("en-IN", { hour:"2-digit", minute:"2-digit" });
+          addAudit("SAVE DRAFT", "Timesheet", `${state.timesheet.week} saved`);
+          saveState();
+          render();
+          return toast("Timesheet draft saved.", "success");
+        }
+        if (action === "submit-timesheet") return timesheetSubmitModal();
+        if (action === "confirm-timesheet-submit") return submitTimesheet();
+        if (action === "add-comment") return commentModal(target.dataset.id);
+        if (action === "attach-file") return attachmentModal(target.dataset.id);
+        if (action === "asset-action") return assetDetailsModal(target.dataset.id);
+        if (action === "asset-issue") {
+          const asset = state.assets.find(item => item.id === target.dataset.id);
+          return newRequestModal({ module:"helpdesk", preset:`Issue with ${asset?.name || target.dataset.id}` });
+        }
+        if (action === "asset-return") {
+          const asset = state.assets.find(item => item.id === target.dataset.id);
+          if (!asset) return toast("Asset record was not found.", "error");
+          asset.status = "Return requested";
+          const req = { id:nextRequestId("assets"), title:`Return ${asset.name}`, module:"assets", requester:user().name, date:todayLabel(), owner:USERS.assetadmin.name, status:"SUBMITTED", amount:"", priority:"Normal", reason:"Asset return requested from the assigned asset record.", details:{ assetType:asset.type, assetId:asset.id, quantity:"1", location:user().location || "Delhi office" }, history:[{ action:"Return requested", time:"Just now", actor:user().name }] };
+          state.requests.unshift(req);
+          addAudit("ASSET RETURN", asset.id, `${asset.name} return requested`);
+          saveState();
+          closeModal();
+          render();
+          return toast("Asset return request created.", "success");
+        }
+        if (action === "view-person") return personModal(target.dataset.person);
+        if (action === "contact-person") {
+          const person = DIRECTORY_PEOPLE.find(item => item.name === target.dataset.person);
+          if (navigator.clipboard && person) navigator.clipboard.writeText(person.email).catch(() => {});
+          closeModal();
+          return toast(person ? `${person.email} copied.` : "Contact not found.", person ? "success" : "error");
+        }
+        if (action === "read-article") return articleModal(target.dataset.index);
+        if (action === "new-delegation") return delegationModal();
+        if (action === "cancel-delegation") {
+          const item = state.delegations.find(row => String(row.id) === target.dataset.id);
+          if (item) {
+            item.status = "CANCELLED";
+            addAudit("DELEGATION CANCEL", String(item.id), `${item.delegate} delegation cancelled`);
+            saveState();
+            render();
+            return toast("Delegation cancelled.", "success");
+          }
+        }
+        if (action === "toggle-ooo") {
+          state.outOfOffice = !state.outOfOffice;
+          addAudit("OUT OF OFFICE", user().name, state.outOfOffice ? "Enabled" : "Disabled");
+          saveState();
+          render();
+          return toast(`Out of office ${state.outOfOffice ? "enabled" : "disabled"}.`, "success");
+        }
+        if (action === "calendar-prev") { state.calendarMonth = Math.max(0, state.calendarMonth - 1); saveState(); return render(); }
+        if (action === "calendar-next") { state.calendarMonth = Math.min(11, state.calendarMonth + 1); saveState(); return render(); }
+        if (action === "calendar-today") { state.calendarMonth = 6; saveState(); return render(); }
+        if (action === "calendar-event") return simpleModal(target.dataset.title, `${target.dataset.day} ${new Date(2026, state.calendarMonth, 1).toLocaleDateString("en-GB", { month:"long", year:"numeric" })}. This calendar event is visible to your current role.`);
+        if (action === "admin-add") return adminEditor(target.dataset.kind);
+        if (action === "admin-edit") return adminEditor(target.dataset.kind, Number(target.dataset.index));
+        if (action === "profile-toggle") {
+          state.preferences[state.user] = state.preferences[state.user] || { email:true, compact:false };
+          const pref = target.dataset.pref;
+          state.preferences[state.user][pref] = !state.preferences[state.user][pref];
+          saveState();
+          render();
+          return toast(`${pref === "compact" ? "Compact tables" : "Email notifications"} ${state.preferences[state.user][pref] ? "enabled" : "disabled"}.`, "success");
+        }
+        if (action === "save-profile") {
+          const form = document.getElementById("profileForm");
+          if (!form?.reportValidity()) return;
+          const data = new FormData(form);
+          state.profiles[state.user] = Object.assign({}, state.profiles[state.user] || {}, { name:String(data.get("name")).trim(), department:String(data.get("department") || ""), location:String(data.get("location") || ""), phone:String(data.get("phone") || "") });
+          addAudit("PROFILE UPDATE", user().code, "Profile details saved");
+          saveState();
+          render();
+          return toast("Profile changes saved.", "success");
+        }
+      });
+
+      document.addEventListener("change", event => {
+        const target = event.target.closest('[data-action="switch-user"]');
+        if (target) {
+          state.user = target.value;
+          state.loggedIn = true;
+          addAudit("USER SWITCH", "Prototype session", `Demo role switched to ${user().code}`);
+          saveState();
+          closeModal();
+          navigate("dashboard");
+          toast(`Switched to ${user().name}.`, "success");
+        }
+        if (event.target.id === "newModule") {
+          return newRequestModal({ module:event.target.value });
+        }
+        if (event.target.id === "requestModuleFilter" || event.target.id === "requestStatusFilter") {
+          state.requestFilters = {
+            module:document.getElementById("requestModuleFilter")?.value || "",
+            status:document.getElementById("requestStatusFilter")?.value || ""
+          };
+          saveState();
+          return render();
+        }
+        if (event.target.id === "reportModule" || event.target.id === "reportPeriod") {
+          state.reportFilter = {
+            module:document.getElementById("reportModule")?.value || "",
+            period:document.getElementById("reportPeriod")?.value || "30"
+          };
+          saveState();
+          return render();
+        }
+        if (event.target.id === "directoryLocation") {
+          const search = document.getElementById("directorySearch")?.value.toLowerCase().trim() || "";
+          const location = event.target.value;
+          const filtered = DIRECTORY_PEOPLE.filter(person => (!location || person.location === location) && (!search || `${person.name} ${person.role} ${person.department}`.toLowerCase().includes(search)));
+          const grid = document.getElementById("directoryGrid");
+          const count = document.getElementById("directoryCount");
+          if (grid) grid.innerHTML = directoryCards(filtered);
+          if (count) count.textContent = `${filtered.length} people`;
+        }
+        if (event.target.id === "knowledgeCategory") {
+          const search = document.getElementById("knowledgeSearch")?.value.toLowerCase().trim() || "";
+          const category = event.target.value;
+          const filtered = KNOWLEDGE_ARTICLES.filter(article => (!category || article.category === category) && (!search || `${article.title} ${article.summary}`.toLowerCase().includes(search)));
+          const grid = document.getElementById("knowledgeGrid");
+          if (grid) grid.innerHTML = knowledgeCards(filtered);
+        }
+        if (event.target.id === "auditAction") updateAuditView();
+      });
+
+      document.addEventListener("submit", event => {
+        if (event.target.id === "loginForm") {
+          event.preventDefault();
+          state.user = new FormData(event.target).get("user");
+          state.loggedIn = true;
+          saveState();
+          navigate("dashboard");
+          return toast(`Welcome, ${user().name}.`, "success");
+        }
+        if (event.target.id === "requestForm") {
+          event.preventDefault();
+          return submitNewRequest(event.target);
+        }
+        if (event.target.id === "globalSearchForm") {
+          event.preventDefault();
+          return searchModal(String(new FormData(event.target).get("query") || ""));
+        }
+        if (event.target.id === "commentForm") {
+          event.preventDefault();
+          const form = event.target;
+          if (!form.reportValidity()) return;
+          const id = form.dataset.id;
+          const text = String(new FormData(form).get("comment") || "").trim();
+          if (!text) return;
+          state.comments[id] = state.comments[id] || [];
+          state.comments[id].unshift({ author:user().name, time:"Just now", text });
+          const req = state.requests.find(item => item.id === id);
+          if (req) {
+            req.history = req.history || [];
+            req.history.unshift({ action:"Comment added", time:"Just now", actor:user().name });
+          }
+          addAudit("COMMENT", id, text.slice(0,100));
+          saveState();
+          closeModal();
+          render();
+          return toast("Comment added.", "success");
+        }
+        if (event.target.id === "attachmentForm") {
+          event.preventDefault();
+          const form = event.target;
+          if (!form.reportValidity()) return;
+          const id = form.dataset.id;
+          const name = String(new FormData(form).get("name") || "").trim();
+          if (!/\.[a-z0-9]{2,5}$/i.test(name)) return toast("Enter a filename with an extension, such as receipt.pdf.", "error");
+          state.attachments[id] = state.attachments[id] || [];
+          state.attachments[id].unshift({ name, addedBy:user().name, time:"Just now" });
+          addAudit("ATTACH", id, name);
+          saveState();
+          closeModal();
+          render();
+          return toast("Attachment added.", "success");
+        }
+        if (event.target.id === "delegationForm") {
+          event.preventDefault();
+          const form = event.target;
+          if (!form.reportValidity()) return;
+          const data = Object.fromEntries(new FormData(form).entries());
+          if (data.end < data.start) {
+            form.elements.end.focus();
+            return toast("Delegation end date cannot be before the start date.", "error");
+          }
+          if (data.delegate === user().name) return toast("Choose another employee as the delegate.", "error");
+          state.delegations.unshift({ id:Date.now(), delegate:data.delegate, start:data.start, end:data.end, scope:data.scope, reason:data.reason, status:"SCHEDULED" });
+          addAudit("DELEGATION CREATE", data.delegate, `${data.scope}, ${formatDate(data.start)} to ${formatDate(data.end)}`);
+          saveState();
+          closeModal();
+          render();
+          return toast("Delegation created.", "success");
+        }
+        if (event.target.id === "adminForm") {
+          event.preventDefault();
+          const form = event.target;
+          if (!form.reportValidity()) return;
+          const data = new FormData(form);
+          const row = [String(data.get("field0")).trim(), String(data.get("field1")).trim(), String(data.get("field2")).trim(), String(data.get("status"))];
+          const kind = form.dataset.kind;
+          const index = Number(form.dataset.index);
+          if (index >= 0) state.adminData[kind][index] = row;
+          else state.adminData[kind].unshift(row);
+          addAudit(index >= 0 ? "ADMIN UPDATE" : "ADMIN CREATE", kind, row[0]);
+          saveState();
+          closeModal();
+          render();
+          return toast("Administration record saved.", "success");
+        }
+        if (event.target.id === "aiForm") {
+          event.preventDefault();
+          const input = event.target.elements.prompt;
+          const prompt = input.value.trim();
+          if (!prompt) return;
+          state.aiMessages.push({ from:"user", text:prompt });
+          const answer = /approve|reject|pay/i.test(prompt)
+            ? "I cannot approve, reject, or make a payment. I can show the request and explain the required process."
+            : /leave/i.test(prompt)
+              ? `You have ${state.requests.filter(r => r.module === "leave").length} leave request(s). Your current annual leave balance is 12 days.`
+              : `I found ${state.requests.length} requests in the shared prototype. ${pendingCount()} currently need review.`;
+          state.aiMessages.push({ from:"assistant", text:answer });
+          addAudit("AI QUERY", "AI Assistant", prompt.slice(0,80));
+          saveState();
+          render();
+        }
+      });
+
+      document.addEventListener("input", event => {
+        if (event.target.classList.contains("timesheet-hour")) {
+          const input = event.target;
+          const row = Number(input.dataset.row);
+          const day = Number(input.dataset.day);
+          const value = Math.min(24, Math.max(0, Number(input.value || 0)));
+          state.timesheet.rows[row].hours[day] = value;
+          state.timesheet.status = "DRAFT";
+          saveState();
+          const rowTotal = state.timesheet.rows[row].hours.reduce((a,b) => a + Number(b || 0), 0);
+          const totals = timesheetTotals();
+          const updates = {
+            [`ts-row-${row}`]:rowTotal.toFixed(1),
+            "ts-total":`${totals.total.toFixed(1)}h`,
+            "ts-billable":`${totals.billable.toFixed(1)}h`,
+            "ts-nonbillable":`${totals.nonBillable.toFixed(1)}h`,
+            "ts-missing":`${totals.missing.toFixed(1)}h`
+          };
+          Object.entries(updates).forEach(([id,value]) => { const node=document.getElementById(id); if (node) node.textContent=value; });
+        }
+        if (event.target.id === "directorySearch") {
+          const search = event.target.value.toLowerCase().trim();
+          const location = document.getElementById("directoryLocation")?.value || "";
+          const filtered = DIRECTORY_PEOPLE.filter(person => (!location || person.location === location) && (!search || `${person.name} ${person.role} ${person.department}`.toLowerCase().includes(search)));
+          const grid = document.getElementById("directoryGrid");
+          const count = document.getElementById("directoryCount");
+          if (grid) grid.innerHTML = directoryCards(filtered);
+          if (count) count.textContent = `${filtered.length} people`;
+        }
+        if (event.target.id === "knowledgeSearch") {
+          const search = event.target.value.toLowerCase().trim();
+          const category = document.getElementById("knowledgeCategory")?.value || "";
+          const filtered = KNOWLEDGE_ARTICLES.filter(article => (!category || article.category === category) && (!search || `${article.title} ${article.summary}`.toLowerCase().includes(search)));
+          const grid = document.getElementById("knowledgeGrid");
+          if (grid) grid.innerHTML = knowledgeCards(filtered);
+        }
+        if (event.target.id === "auditSearch") updateAuditView();
+      });
+
+      document.addEventListener("keydown", event => {
+        if (event.key === "Enter" && event.target.id === "globalSearch") {
+          event.preventDefault();
+          return searchModal(event.target.value);
+        }
+        if (event.key === "Escape") {
+          if (currentModal) closeModal();
+          else if (sidebarOpen) { sidebarOpen = false; render(); }
+        }
+      });
+      window.addEventListener("hashchange", render);
+      render();
+    })();
+  </script>
+</body>
+</html>
